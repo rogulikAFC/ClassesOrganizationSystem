@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ClassesOrganizationSistem.Domain.Entities.RoomEntities
 {
     [PrimaryKey(nameof(RoomId), nameof(EquipmentId))]
-    public class RoomEquipment
+    public class RoomToEquipment
     {
         [Required]
         public int RoomId { get; set; }

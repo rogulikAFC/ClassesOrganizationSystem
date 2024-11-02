@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ClassesOrganizationSistem.Domain.Entities
 {
     [PrimaryKey(nameof(StudentsClassId), nameof(StudentId))]
-    public class StudentsClassStudent
+    public class StudentClassToStudent
     {
         [Required]
         public int StudentsClassId { get; set; }

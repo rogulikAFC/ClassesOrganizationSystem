@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ClassesOrganizationSistem.Domain.Entities.ScheduleEntites
 {
     [PrimaryKey(nameof(LessonId), nameof(LessonsScheduleId))]
-    public class LessonLessonsSchedule
+    public class LessonToLessonsSchedule
     {
         [Required]
         public int LessonId { get; set; }
