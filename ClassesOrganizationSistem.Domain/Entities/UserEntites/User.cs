@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
@@ -20,8 +18,27 @@ namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
 
         public Role Role { get; set; } = null!;
 
-        public int SchoolId { get; set; }
+        public int? SchoolId { get; set; }
 
         public School? School { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public override string Email { get; set; } = null!;
+
+        [Required]
+        [Phone]
+        public override string PhoneNumber { get; set; } = null!;
+
+        [Required]
+        [MaxLength(32)]
+        public override string UserName { get; set; } = null!;
+
+        public IEnumerable<StudentsClassToStudent> StudentsClassesToStudents
+            = new List<StudentsClassToStudent>();
+
+        public IEnumerable<StudentsClass> StudentsClasses
+            => StudentsClassesToStudents.Select(studentsClassToStudent =>
+                studentsClassToStudent.StudentsClass);
     }
 }

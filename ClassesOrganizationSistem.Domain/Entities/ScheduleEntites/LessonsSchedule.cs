@@ -18,5 +18,13 @@ namespace ClassesOrganizationSistem.Domain.Entities.ScheduleEntites
         public int? DayOfWeek { get; set; }
 
         public DateOnly? Date { get; set; }
+
+
+        public IEnumerable<LessonToLessonsSchedule> LessonsToLessonsSchedules
+            = new List<LessonToLessonsSchedule>();
+
+        public IEnumerable<Lesson> Lessons
+            => LessonsToLessonsSchedules.Select(lessonToLessonsSchedule =>
+                lessonToLessonsSchedule.Lesson);
     }
 }

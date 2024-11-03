@@ -3,6 +3,7 @@ using System;
 using ClassesOrganizationSistem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ClassesOrganizationSystemDbContext))]
-    partial class ClassesOrganizationSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241102140553_NullableUsersSchoolId")]
+    partial class NullableUsersSchoolId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,6 +226,21 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.ToTable("Schools");
                 });
 
+            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.StudentClassToStudent", b =>
+                {
+                    b.Property<int>("StudentsClassId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("StudentsClassId", "StudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentClassesToStudents");
+                });
+
             modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.StudentsClass", b =>
                 {
                     b.Property<int>("Id")
@@ -242,21 +260,6 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StudentsClass");
-                });
-
-            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.StudentsClassToStudent", b =>
-                {
-                    b.Property<int>("StudentsClassId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("StudentsClassId", "StudentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentsClassesToStudents");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.UserEntites.Role", b =>
@@ -577,7 +580,7 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.Navigation("StudentsClass");
                 });
 
-            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.StudentsClassToStudent", b =>
+            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.StudentClassToStudent", b =>
                 {
                     b.HasOne("ClassesOrganizationSistem.Domain.Entities.UserEntites.User", "Student")
                         .WithMany()

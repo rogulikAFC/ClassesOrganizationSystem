@@ -24,5 +24,11 @@ namespace ClassesOrganizationSistem.Domain.Entities.RoomEntities
         public int StatusId { get; set; }
 
         public RoomStatus Status { get; set; } = null!;
+
+        public IEnumerable<RoomToEquipment> RoomsToEqipments { get; set; } 
+            = new List<RoomToEquipment>();
+
+        public IEnumerable<Equipment> Equipments
+            => RoomsToEqipments.Select(roomToEquipment => roomToEquipment.Equipment);
     }
 }

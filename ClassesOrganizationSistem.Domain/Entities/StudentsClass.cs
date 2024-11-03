@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ClassesOrganizationSistem.Domain.Entities.UserEntites;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassesOrganizationSistem.Domain.Entities
@@ -14,5 +15,14 @@ namespace ClassesOrganizationSistem.Domain.Entities
         public string Title { get; set; } = null!;
 
         public int SchoolId { get; set; }
+
+        public School School { get; set; } = null!;
+
+        public IEnumerable<StudentsClassToStudent> StudentsClassesToStudents
+            = new List<StudentsClassToStudent>();
+
+        public IEnumerable<User> Students
+            => StudentsClassesToStudents.Select(studentClassToStudent =>
+                studentClassToStudent.Student);
     }
 }

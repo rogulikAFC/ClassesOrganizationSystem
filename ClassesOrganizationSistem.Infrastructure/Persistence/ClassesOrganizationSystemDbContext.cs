@@ -31,6 +31,6 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence
 
         public DbSet<School> Schools { get; set; } = null!;
 
-        public DbSet<StudentClassToStudent> StudentClassesToStudents { get; set; } = null!;
+        public DbSet<StudentsClassToStudent> StudentsClassesToStudents { get; set; } = null!;
     }
 }
