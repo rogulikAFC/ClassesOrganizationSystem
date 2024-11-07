@@ -19,8 +19,6 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence
 
         public DbSet<LessonsSchedule> LessonsSchedules { get; set; } = null!;
 
-        public DbSet<LessonToLessonsSchedule> LessonsToLessonsSchedules { get; set; } = null!;
-
         public DbSet<Equipment> Equipments { get; set; } = null!;
 
         public DbSet<Room> Rooms { get; set; } = null!;

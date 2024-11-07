@@ -19,12 +19,7 @@ namespace ClassesOrganizationSistem.Domain.Entities.ScheduleEntites
 
         public DateOnly? Date { get; set; }
 
-
-        public IEnumerable<LessonToLessonsSchedule> LessonsToLessonsSchedules
-            = new List<LessonToLessonsSchedule>();
-
-        public IEnumerable<Lesson> Lessons
-            => LessonsToLessonsSchedules.Select(lessonToLessonsSchedule =>
-                lessonToLessonsSchedule.Lesson);
+        public IEnumerable<Lesson> Lessons { get; set; }
+            = new List<Lesson>();
     }
 }

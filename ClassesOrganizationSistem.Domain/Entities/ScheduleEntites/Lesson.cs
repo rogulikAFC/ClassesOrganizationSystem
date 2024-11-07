@@ -28,5 +28,10 @@ namespace ClassesOrganizationSistem.Domain.Entities.ScheduleEntites
         public int SubjectId { get; set; }
 
         public Subject Subject { get; set; } = null!;
+
+        [Required]
+        public int LessonsScheduleId { get; set; }
+
+        public LessonsSchedule LessonsSchedule { get; set; } = null!;
     }
 }
