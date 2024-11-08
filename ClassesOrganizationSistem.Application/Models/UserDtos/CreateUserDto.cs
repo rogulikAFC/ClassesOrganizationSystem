@@ -41,7 +41,6 @@ namespace ClassesOrganizationSistem.Application.Models.UserDtos
                 Name = Name,
                 Surname = Surname,
                 RoleId = RoleId,
-                SchoolId = SchoolId,
                 Email = Email,
                 PhoneNumber = PhoneNumber,
                 UserName = UserName,

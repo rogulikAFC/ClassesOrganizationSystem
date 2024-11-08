@@ -1,4 +1,5 @@
 ﻿using ClassesOrganizationSistem.Domain.Entities.RoomEntities;
+using ClassesOrganizationSistem.Domain.Entities.UserEntites;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +26,11 @@ namespace ClassesOrganizationSistem.Domain.Entities
         public string Email { get; set; } = null!;
 
         public IEnumerable<Room> Rooms = new List<Room>();
+
+        public IEnumerable<UserToSchool> UsersToSchool { get; set; }
+            = new List<UserToSchool>();
+
+        public IEnumerable<User> Users => UsersToSchool
+            .Select(userToSchool => userToSchool.User);
     }
 }

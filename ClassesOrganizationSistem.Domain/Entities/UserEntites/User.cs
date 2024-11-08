@@ -18,10 +18,6 @@ namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
 
         public Role Role { get; set; } = null!;
 
-        public int? SchoolId { get; set; }
-
-        public School? School { get; set; }
-
         [Required]
         [EmailAddress]
         public override string Email { get; set; } = null!;
@@ -40,5 +36,11 @@ namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
         public IEnumerable<StudentsClass> StudentsClasses
             => StudentsClassesToStudents.Select(studentsClassToStudent =>
                 studentsClassToStudent.StudentsClass);
+
+        public IEnumerable<UserToSchool> SchoolsToUser
+            = new List<UserToSchool>();
+
+        public IEnumerable<School> Schools => 
+            SchoolsToUser.Select(schoolToUser => schoolToUser.School);
     }
 }

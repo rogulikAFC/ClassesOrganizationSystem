@@ -19,7 +19,13 @@ namespace ClassesOrganizationSistem.Application.UnitOfWork.Repositories
         void AddUserToClass(
             User user, StudentsClass studentsClass);
 
+        void AddUserToSchool(
+            User user, School school);
+
         Task RemoveUserFromClassAsync(
             User user, StudentsClass studentsClass);
+
+        Task RemoveUserFromSchoolAsync(
+            User user, School school);
     }
 }

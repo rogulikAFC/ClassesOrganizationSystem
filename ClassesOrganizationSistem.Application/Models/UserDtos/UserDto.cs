@@ -1,4 +1,5 @@
-﻿using ClassesOrganizationSistem.Domain.Entities.UserEntites;
+﻿using ClassesOrganizationSistem.Application.Models.SchoolDtos;
+using ClassesOrganizationSistem.Domain.Entities.UserEntites;
 
 namespace ClassesOrganizationSistem.Application.Models.UserDtos
 {
@@ -16,9 +17,8 @@ namespace ClassesOrganizationSistem.Application.Models.UserDtos
 
         public string Role { get; set; } = null!;
 
-        public int? SchoolId { get; set; }
-
-        public string? SchoolTitle { get; set; }
+        public IEnumerable<SchoolAnnotationDto> Schools { get; set; }
+            = new List<SchoolAnnotationDto>();
 
         public static UserDto MapFromUser(User user)
         {
@@ -30,8 +30,8 @@ namespace ClassesOrganizationSistem.Application.Models.UserDtos
                 Email = user.Email,
                 UserName = user.UserName,
                 Role = user.Role.Name,
-                SchoolId = user.SchoolId,
-                SchoolTitle = user.School?.Title
+                Schools = user.Schools
+                    .Select(SchoolAnnotationDto.MapFromSchool)
             };
         }
     }

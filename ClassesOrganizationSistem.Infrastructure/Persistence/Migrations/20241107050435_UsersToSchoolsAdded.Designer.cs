@@ -3,6 +3,7 @@ using System;
 using ClassesOrganizationSistem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ClassesOrganizationSystemDbContext))]
-    partial class ClassesOrganizationSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107050435_UsersToSchoolsAdded")]
+    partial class UsersToSchoolsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -489,6 +492,21 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SchoolUser", b =>
+                {
+                    b.Property<int>("SchoolsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SchoolsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("SchoolUser");
+                });
+
             modelBuilder.Entity("StudentsClassUser", b =>
                 {
                     b.Property<int>("StudentsClassesId")
@@ -702,6 +720,21 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.HasOne("ClassesOrganizationSistem.Domain.Entities.UserEntites.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SchoolUser", b =>
+                {
+                    b.HasOne("ClassesOrganizationSistem.Domain.Entities.School", null)
+                        .WithMany()
+                        .HasForeignKey("SchoolsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClassesOrganizationSistem.Domain.Entities.UserEntites.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
