@@ -30,6 +30,9 @@ namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
         [MaxLength(32)]
         public override string UserName { get; set; } = null!;
 
+        public IEnumerable<UserRoleInSchool> SchoolRoles { get; set; }
+            = new List<UserRoleInSchool>();
+
         public IEnumerable<StudentsClassToStudent> StudentsClassesToStudents
             = new List<StudentsClassToStudent>();
 
@@ -42,5 +45,22 @@ namespace ClassesOrganizationSistem.Domain.Entities.UserEntites
 
         public IEnumerable<School> Schools => 
             SchoolsToUser.Select(schoolToUser => schoolToUser.School);
+
+        public IEnumerable<string> GetUserRolesInSchool(School school) =>  
+            SchoolRoles
+                .Where(schoolRole => schoolRole.School == school)
+                .Select(userRoleInSchool => userRoleInSchool.SchoolRole.Name);
+
+        public bool IsUserAdminInSchool(School school) =>
+            GetUserRolesInSchool(school)
+            .Contains("admin");
+
+        public bool IsUserTeacherInSchool(School school) =>
+            GetUserRolesInSchool(school)
+            .Contains("teacher");
+
+        public bool IsUserStudentInSchool(School school) =>
+            GetUserRolesInSchool(school)
+            .Contains("student");
     }
 }

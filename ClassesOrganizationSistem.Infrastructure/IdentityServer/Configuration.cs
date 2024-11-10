@@ -14,8 +14,7 @@ namespace ClassesOrganizationSistem.Infrastructure.IdentityServer
         public static IEnumerable<ApiScope> Scopes =>
             new List<ApiScope>
             {
-                new ApiScope("student"),
-                new ApiScope("teacher"),
+                new ApiScope("user"),
                 new ApiScope("admin")
             };
 

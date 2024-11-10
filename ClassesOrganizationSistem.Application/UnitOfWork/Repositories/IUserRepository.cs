@@ -8,6 +8,9 @@ namespace ClassesOrganizationSistem.Application.UnitOfWork.Repositories
     {
         Task<User?> GetUserByIdAsync(int id);
 
+        Task<User?> GetUserByUsernameAsync(
+            string username);
+
         Task<IEnumerable<User>> ListUsersAsync(
             string? query, int pageNum = 1, int pageSize = 10);
 
@@ -20,12 +23,24 @@ namespace ClassesOrganizationSistem.Application.UnitOfWork.Repositories
             User user, StudentsClass studentsClass);
 
         void AddUserToSchool(
-            User user, School school);
+            User user, School school, SchoolRole role);
 
         Task RemoveUserFromClassAsync(
             User user, StudentsClass studentsClass);
 
         Task RemoveUserFromSchoolAsync(
-            User user, School school);
+            User user, School school, SchoolRole role);
+
+        void AcceptAddRoleRequest(AddRoleRequest request);
+
+        void DenyAddRoleRequest(AddRoleRequest request);
+
+        void AddRoleToUserInSchool(User user, School school, SchoolRole role);
+
+        void RemoveRoleFromUserInSchool(User user, School school, SchoolRole role);
+
+        Task<SchoolRole?> GetRoleByIdAsync(int id);
+
+        Task<IEnumerable<SchoolRole>> GetRolesByQuery(string query);
     }
 }

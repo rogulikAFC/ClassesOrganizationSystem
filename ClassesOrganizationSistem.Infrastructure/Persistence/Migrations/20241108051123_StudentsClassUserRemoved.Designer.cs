@@ -3,6 +3,7 @@ using System;
 using ClassesOrganizationSistem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ClassesOrganizationSystemDbContext))]
-    partial class ClassesOrganizationSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241108051123_StudentsClassUserRemoved")]
+    partial class StudentsClassUserRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,26 +257,6 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentsClassesToStudents");
-                });
-
-            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.UserEntites.AddRoleRequest", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SchoolId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "SchoolId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("SchoolId");
-
-                    b.ToTable("AddRoleRequests");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.UserEntites.Role", b =>
@@ -666,33 +649,6 @@ namespace ClassesOrganizationSistem.Infrastructure.Persistence.Migrations
                     b.Navigation("Student");
 
                     b.Navigation("StudentsClass");
-                });
-
-            modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.UserEntites.AddRoleRequest", b =>
-                {
-                    b.HasOne("ClassesOrganizationSistem.Domain.Entities.UserEntites.SchoolRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClassesOrganizationSistem.Domain.Entities.School", "School")
-                        .WithMany()
-                        .HasForeignKey("SchoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClassesOrganizationSistem.Domain.Entities.UserEntites.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("School");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSistem.Domain.Entities.UserEntites.User", b =>
