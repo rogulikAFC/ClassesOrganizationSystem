@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClassesOrganizationSystem.Application.UnitOfWork;
+using ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +13,8 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence
         {
             services.AddDbContext<ClassesOrganizationSystemDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("ClassesOrganizationSystemDb")));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
             return services;
         }
