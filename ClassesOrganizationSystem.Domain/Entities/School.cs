@@ -27,10 +27,13 @@ namespace ClassesOrganizationSystem.Domain.Entities
 
         public IEnumerable<Room> Rooms = new List<Room>();
 
-        public IEnumerable<UserToSchool> UsersToSchool { get; set; }
-            = new List<UserToSchool>();
+        public IEnumerable<UserRoleInSchool> UsersRolesInSchool { get; set; }
+            = new List<UserRoleInSchool>();
 
-        public IEnumerable<User> Users => UsersToSchool
-            .Select(userToSchool => userToSchool.User);
+        public IEnumerable<User> Users => UsersRolesInSchool
+            .Select(userRoleInSchool => userRoleInSchool.User);
+
+        public IEnumerable<StudentsClass> StudentsClasses { get; set; } 
+            = new List<StudentsClass>();
     }
 }

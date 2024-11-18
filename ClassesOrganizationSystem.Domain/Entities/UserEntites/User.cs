@@ -13,6 +13,8 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
         [MaxLength(32)]
         public string Surname { get; set; } = null!;
 
+        public string FullName => Name + " " + Surname;
+
         [Required]
         public int RoleId { get; set; }
 
@@ -40,15 +42,12 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
             => StudentsClassesToStudents.Select(studentsClassToStudent =>
                 studentsClassToStudent.StudentsClass);
 
-        public IEnumerable<UserToSchool> SchoolsToUser
-            = new List<UserToSchool>();
-
         public IEnumerable<School> Schools => 
-            SchoolsToUser.Select(schoolToUser => schoolToUser.School);
+            SchoolRoles.Select(userRoleInSchool => userRoleInSchool.School);
 
         public IEnumerable<string> GetUserRolesInSchool(School school) =>  
             SchoolRoles
-                .Where(schoolRole => schoolRole.School == school)
+                .Where(userRoleInSchool => userRoleInSchool.School == school)
                 .Select(userRoleInSchool => userRoleInSchool.SchoolRole.Name);
 
         public bool IsUserAdminInSchool(School school) =>

@@ -3,6 +3,7 @@ using System;
 using ClassesOrganizationSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ClassesOrganizationSystemDbContext))]
-    partial class ClassesOrganizationSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118042425_UserToSchoolDroped")]
+    partial class UserToSchoolDroped
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,7 +241,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("StudentsClasses");
+                    b.ToTable("StudentsClass");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClassToStudent", b =>
@@ -641,7 +644,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClass", b =>
                 {
                     b.HasOne("ClassesOrganizationSystem.Domain.Entities.School", "School")
-                        .WithMany("StudentsClasses")
+                        .WithMany()
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -813,8 +816,6 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.School", b =>
                 {
-                    b.Navigation("StudentsClasses");
-
                     b.Navigation("UsersRolesInSchool");
                 });
 

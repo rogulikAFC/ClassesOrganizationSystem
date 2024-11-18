@@ -22,25 +22,24 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         void AddUserToClass(
             User user, StudentsClass studentsClass);
 
-        void AddUserToSchool(
-            User user, School school, SchoolRole role);
-
         Task RemoveUserFromClassAsync(
             User user, StudentsClass studentsClass);
 
-        Task RemoveUserFromSchoolAsync(
-            User user, School school, SchoolRole role);
+        void RemoveUserFromSchool(
+            User user, School school);
+
+        void AddAddRoleRequest(AddRoleRequest request);
 
         void AcceptAddRoleRequest(AddRoleRequest request);
 
         void DenyAddRoleRequest(AddRoleRequest request);
 
-        void AddRoleToUserInSchool(User user, School school, SchoolRole role);
-
         void RemoveRoleFromUserInSchool(User user, School school, SchoolRole role);
 
-        Task<SchoolRole?> GetRoleByIdAsync(int id);
+        Task<SchoolRole?> GetSchoolRoleByIdAsync(int id);
 
-        Task<IEnumerable<SchoolRole>> GetRolesByQuery(string query);
+        Task<IEnumerable<SchoolRole>> GetSchoolRolesByQuery(string query);
+
+        void AddUserWithRoleToSchool(User user, School school, SchoolRole role);
     }
 }

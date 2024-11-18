@@ -1,4 +1,5 @@
 ﻿using ClassesOrganizationSystem.Domain.Entities;
+using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 
 namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 {
@@ -9,7 +10,7 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         Task<IEnumerable<School>> ListSchoolsAsync(
             string? query, int pageNum = 1, int pageSize = 5);
 
-        void AddSchool(School school);
+        Task AddSchool(School school, User creator);
 
         void RemoveSchool(School school);
     }

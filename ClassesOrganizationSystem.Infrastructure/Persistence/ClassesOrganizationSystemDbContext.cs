@@ -29,9 +29,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence
 
         public DbSet<School> Schools { get; set; } = null!;
 
-        public DbSet<StudentsClassToStudent> StudentsClassesToStudents { get; set; } = null!;
+        public DbSet<StudentsClass> StudentsClasses { get; set; } = null!;
 
-        public DbSet<UserToSchool> UsersToSchools { get; set; } = null!;
+        public DbSet<StudentsClassToStudent> StudentsClassesToStudents { get; set; } = null!;
 
         public DbSet<SchoolRole> SchoolRoles { get; set; } = null!;
 
@@ -42,11 +42,6 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<User>()
-                .HasMany(user => user.Schools)
-                .WithMany(school => school.Users)
-                .UsingEntity<UserToSchool>();
 
             builder.Entity<StudentsClass>()
                 .HasMany(studentsClass => studentsClass.Students)
