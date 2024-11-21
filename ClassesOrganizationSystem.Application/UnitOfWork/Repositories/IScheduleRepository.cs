@@ -1,4 +1,9 @@
-﻿using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;
+﻿using ClassesOrganizationSystem.Application.Models.LessonDtos;
+using ClassesOrganizationSystem.Domain.Aggregates;
+using ClassesOrganizationSystem.Domain.Entities;
+using ClassesOrganizationSystem.Domain.Entities.RoomEntities;
+using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;
+using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 
 namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 {
@@ -12,38 +17,38 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 
         void AddLesson(Lesson lesson);
 
-        Task<LessonsSchedule> GetLessonsScheduleByClassIdAndDayOfWeekAsync(
-            int classId, int dayOfWeek);
+        Task<LessonsSchedule?> GetLessonsScheduleByClassIdAndDayOfWeekAsync(
+            StudentsClass studentsClass, int dayOfWeek);
 
-        Task<LessonsSchedule> GetLessonsScheduleByClassIdAndDateAsync(
-            int classId, DateOnly? date);
-
-        Task<IEnumerable<LessonsSchedule>> GetLessonsSchedulesForWeekForClassAsync(
-            int classId, DateOnly firstWeekDay);
+        Task<LessonsSchedule?> GetLessonsScheduleByClassIdAndDateAsync(
+            StudentsClass studentsClass, DateOnly date);
 
         Task<IEnumerable<LessonsSchedule>> GetLessonsSchedulesForWeekForClassAsync(
-            int classId);
+            StudentsClass studentsClass, DateOnly firstWeekDay);
 
-        Task<LessonsSchedule> GetLessonsScheduleForTeacherForDateAsync(
-            int teacherId, DateOnly date);
+        Task<IEnumerable<LessonsSchedule>> GetLessonsSchedulesForWeekForClassAsync(
+            StudentsClass studentsClass);
 
-        Task<LessonsSchedule> GetLessonsScheduleForTeacherByDayOfWeekAsync(
-            int teacherId, int dayOfWeek);
+        Task<ListOfLessons> GetLessonsScheduleForTeacherForDateAsync(
+            User teacher, DateOnly date);
 
-        Task<LessonsSchedule> GetLessonsSchedulesForTeacherForWeekAsync(
-            int teacherId, DateOnly firstWeekDay);
+        Task<ListOfLessons> GetLessonsScheduleForTeacherByDayOfWeekAsync(
+            User teacher, int dayOfWeek);
 
-        Task<LessonsSchedule> GetLessonsSchedulesForTeacherForWeekAsync(
-            int teacherId);
+        Task<IEnumerable<ListOfLessons>> GetLessonsSchedulesForTeacherForWeekAsync(
+            User teacher, DateOnly firstWeekDay);
+
+        Task<IEnumerable<ListOfLessons>> GetLessonsSchedulesForTeacherForWeekAsync(
+            User teacher);
 
         void RemoveLessonsSchedule(LessonsSchedule lessonsSchedule);
 
         void AddLessonsSchedule(LessonsSchedule lessonsSchedule);
 
-        Task<LessonsSchedule> GetLessonsScheduleForRoomForDayOfWeek(
-            int roomId, int dayOfWeek);
+        Task<ListOfLessons> GetLessonsScheduleForRoomForDayOfWeekAsync(
+            Room room, int dayOfWeek);
 
-        Task<LessonsSchedule> GetLessonsScheduleForRoomForDate(
-            int roomId, DateOnly date);
+        Task<ListOfLessons> GetLessonsScheduleForRoomForDate(
+            Room room, DateOnly date);
     }
 }
