@@ -11,7 +11,7 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
 
         public int? Capacity { get; set; }
 
-        public SchoolDto School { get; set; } = null!;
+        public SchoolAnnotationDto School { get; set; } = null!;
 
         public RoomStatusDto Status { get; set; } = null!;
 
@@ -25,7 +25,7 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
                 Id = room.Id,
                 Number = room.Number,
                 Capacity = room.Capacity,
-                School = SchoolDto.MapFromSchool(room.School),
+                School = SchoolAnnotationDto.MapFromSchool(room.School),
                 Status = RoomStatusDto.MapFromRoomStatus(room.Status),
                 Equipments = room.Equipments
                     .Select(EquipmentDto.MapFromEquipment)

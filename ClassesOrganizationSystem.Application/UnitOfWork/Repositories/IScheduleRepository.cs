@@ -1,5 +1,4 @@
-﻿using ClassesOrganizationSystem.Application.Models.LessonDtos;
-using ClassesOrganizationSystem.Domain.Aggregates;
+﻿using ClassesOrganizationSystem.Domain.Aggregates;
 using ClassesOrganizationSystem.Domain.Entities;
 using ClassesOrganizationSystem.Domain.Entities.RoomEntities;
 using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;

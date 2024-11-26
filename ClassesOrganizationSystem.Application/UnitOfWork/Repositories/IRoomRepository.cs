@@ -23,7 +23,7 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 
         void CreateEquipment(string title);
 
-        void DeleteEquipment(Equipment equipment);
+        void RemoveEquipment(Equipment equipment);
 
         Task<IEnumerable<Equipment>> ListEquipments(
             string? query, int pageNum = 1, int pageSize = 10);

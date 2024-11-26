@@ -10,9 +10,6 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
 
         public string? Description { get; set; }
 
-        [Required]
-        public int RoomId { get; set; }
-
         public RoomStatus MapToRoomStatus()
         {
             return new RoomStatus

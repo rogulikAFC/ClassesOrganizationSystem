@@ -19,6 +19,9 @@ namespace ClassesOrganizationSystem.Application.Models.SchoolDtos
         [EmailAddress]
         public string Email { get; set; } = null!;
 
+        [Required]
+        public int CreatorId { get; set; }
+
         public School MapToSchool()
         {
             return new School

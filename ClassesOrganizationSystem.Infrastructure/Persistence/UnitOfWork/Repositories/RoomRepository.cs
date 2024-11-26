@@ -40,7 +40,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             _context.Add(equipment);
         }
 
-        public void DeleteEquipment(Equipment equipment)
+        public void RemoveEquipment(Equipment equipment)
         {
             _context.Remove(equipment);
         }

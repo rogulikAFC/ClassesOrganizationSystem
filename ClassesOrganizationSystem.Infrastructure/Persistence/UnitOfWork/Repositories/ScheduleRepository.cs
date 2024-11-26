@@ -5,7 +5,6 @@ using ClassesOrganizationSystem.Domain.Entities.RoomEntities;
 using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;
 using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Repositories
 {
