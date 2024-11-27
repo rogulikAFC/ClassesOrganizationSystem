@@ -6,7 +6,7 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
 {
     public static class IdentityDI
     {
-        public static IServiceCollection AddIdentity(this IServiceCollection services)
+        public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
         {
             services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ClassesOrganizationSystemDbContext>();

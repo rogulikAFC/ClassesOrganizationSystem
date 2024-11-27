@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddPersistence(builder.Configuration);
 
-builder.Services.AddIdentity();
+builder.Services.AddCustomIdentity();
 
 var app = builder.Build();
 

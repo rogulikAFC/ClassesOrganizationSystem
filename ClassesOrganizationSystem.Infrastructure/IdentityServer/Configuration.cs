@@ -7,8 +7,8 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
         public static IEnumerable<IdentityResource> Resources =>
             new List<IdentityResource>
             {
-                new IdentityResources.Profile(),
                 new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
             };
 
         public static IEnumerable<ApiScope> Scopes =>
@@ -26,11 +26,14 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
                     ClientId = "application",
                     AllowedScopes =
                     {
-                        "student",
-                        "teacher",
+                        "user",
                         "admin"
                     },
-                    AllowedGrantTypes = GrantTypes.ClientCredentials
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    }
                 }
             };
     }
