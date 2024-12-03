@@ -20,15 +20,15 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork
 
         public ISchoolRepository SchoolRepository => new SchoolRepository(_context);
 
-        public IScheduleRepository ScheduleRepository => throw new NotImplementedException();
+        public IScheduleRepository ScheduleRepository => new ScheduleRepository(_context);
 
         public IRoomRepository RoomRepository => new RoomRepository(_context);
 
         public IUserRepository UserRepository => new UserRepository(_context, _userManager);
 
-        public Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
     }
 }

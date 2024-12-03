@@ -14,5 +14,7 @@ namespace ClassesOrganizationSystem.Domain.Entities.RoomEntities
 
         [MaxLength(64)]
         public string? Description { get; set; }
+
+        public List<Room> Rooms { get; set; } = new List<Room>();
     }
 }

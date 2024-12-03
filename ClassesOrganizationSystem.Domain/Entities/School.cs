@@ -25,15 +25,17 @@ namespace ClassesOrganizationSystem.Domain.Entities
         [EmailAddress]
         public string Email { get; set; } = null!;
 
-        public IEnumerable<Room> Rooms = new List<Room>();
+        public ICollection<Room> Rooms = new List<Room>();
 
-        public IEnumerable<UserRoleInSchool> UsersRolesInSchool { get; set; }
+        public ICollection<UserRoleInSchool> UsersRolesInSchool { get; set; }
             = new List<UserRoleInSchool>();
 
-        public IEnumerable<User> Users => UsersRolesInSchool
-            .Select(userRoleInSchool => userRoleInSchool.User);
+        [NotMapped]
+        public ICollection<User> Users => UsersRolesInSchool
+            .Select(userRoleInSchool => userRoleInSchool.User)
+            .ToList();
 
-        public IEnumerable<StudentsClass> StudentsClasses { get; set; } 
+        public ICollection<StudentsClass> StudentsClasses { get; set; } 
             = new List<StudentsClass>();
     }
 }

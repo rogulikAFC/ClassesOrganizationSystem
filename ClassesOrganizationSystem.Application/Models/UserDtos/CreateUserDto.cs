@@ -14,9 +14,6 @@ namespace ClassesOrganizationSystem.Application.Models.UserDtos
         [MaxLength(32)]
         public string Surname { get; set; } = null!;
 
-        [Required]
-        public int RoleId { get; set; }
-
         public int? SchoolId { get; set; }
 
         [Required]
@@ -40,7 +37,6 @@ namespace ClassesOrganizationSystem.Application.Models.UserDtos
             {
                 Name = Name,
                 Surname = Surname,
-                RoleId = RoleId,
                 Email = Email,
                 PhoneNumber = PhoneNumber,
                 UserName = UserName,

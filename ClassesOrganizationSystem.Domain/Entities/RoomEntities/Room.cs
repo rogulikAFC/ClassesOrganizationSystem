@@ -20,15 +20,16 @@ namespace ClassesOrganizationSystem.Domain.Entities.RoomEntities
 
         public School School { get; set; } = null!;
 
-        [Required]
-        public int StatusId { get; set; }
+        public int? StatusId { get; set; }
 
-        public RoomStatus Status { get; set; } = null!;
+        public RoomStatus? Status { get; set; }
 
-        public IEnumerable<RoomToEquipment> RoomsToEqipments { get; set; } 
+        public List<RoomToEquipment> RoomsToEqipments { get; set; } 
             = new List<RoomToEquipment>();
 
-        public IEnumerable<Equipment> Equipments
-            => RoomsToEqipments.Select(roomToEquipment => roomToEquipment.Equipment);
+        public List<Equipment> Equipments => 
+            RoomsToEqipments
+                .Select(roomToEquipment => roomToEquipment.Equipment)
+                .ToList();
     }
 }

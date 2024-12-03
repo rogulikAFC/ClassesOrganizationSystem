@@ -28,6 +28,9 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         void RemoveUserFromSchool(
             User user, School school);
 
+        Task<IEnumerable<AddRoleRequest>> ListAddRoleRequestsOfSchool(
+            School school, int pageNum = 1, int pageSize = 10);
+
         void AddAddRoleRequest(AddRoleRequest request);
 
         void AcceptAddRoleRequest(AddRoleRequest request);
@@ -38,7 +41,7 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 
         Task<SchoolRole?> GetSchoolRoleByIdAsync(int id);
 
-        Task<IEnumerable<SchoolRole>> GetSchoolRolesByQuery(string query);
+        Task<IEnumerable<SchoolRole>> ListSchoolRolesByQueryAsync(string query);
 
         void AddUserWithRoleToSchool(User user, School school, SchoolRole role);
     }

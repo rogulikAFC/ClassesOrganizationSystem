@@ -8,6 +8,15 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
     {
         public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
         {
+            services.AddAuthentication()
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://localhost:7290";
+                    options.TokenValidationParameters.ValidateAudience = false;
+                });
+
+            services.AddAuthorization();
+
             services.AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ClassesOrganizationSystemDbContext>();
 

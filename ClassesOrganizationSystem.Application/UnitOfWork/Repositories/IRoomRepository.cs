@@ -17,15 +17,19 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 
         void SetRoomStatusForRoom(Room room, RoomStatus roomStatus);
 
+        void AddRoomStatus(RoomStatus roomStatus);
+
         void AddEquipmentToRoom(Room room, Equipment equipment);
 
         Task RemoveEquipmentFromRoomAsync(Room room, Equipment equipment);
 
-        void CreateEquipment(string title);
+        void CreateEquipment(Equipment equipment);
 
         void RemoveEquipment(Equipment equipment);
 
         Task<IEnumerable<Equipment>> ListEquipments(
             string? query, int pageNum = 1, int pageSize = 10);
+
+        Task<Equipment?> GetEquipmentByIdAsync(int id);
     }
 }

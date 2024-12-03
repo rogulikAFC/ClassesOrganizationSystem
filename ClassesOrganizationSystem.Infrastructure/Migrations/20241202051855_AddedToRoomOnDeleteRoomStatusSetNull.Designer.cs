@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
+namespace ClassesOrganizationSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ClassesOrganizationSystemDbContext))]
-    [Migration("20241107050435_UsersToSchoolsAdded")]
-    partial class UsersToSchoolsAdded
+    [Migration("20241202051855_AddedToRoomOnDeleteRoomStatusSetNull")]
+    partial class AddedToRoomOnDeleteRoomStatusSetNull
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,7 +241,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("StudentsClass");
+                    b.ToTable("StudentsClasses");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClassToStudent", b =>
@@ -257,6 +257,26 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentsClassesToStudents");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.AddRoleRequest", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "SchoolId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("SchoolId");
+
+                    b.ToTable("AddRoleRequests");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", b =>
@@ -287,6 +307,24 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.SchoolRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SchoolRoles");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", b =>
@@ -341,11 +379,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
+
+                    b.Property<int?>("StudentsClassId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -369,12 +407,12 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("StudentsClassId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UserToSchool", b =>
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UserRoleInSchool", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -382,11 +420,16 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.Property<int>("SchoolId")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "SchoolId");
+                    b.Property<int>("SchoolRoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "SchoolId", "SchoolRoleId");
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("UsersToSchools");
+                    b.HasIndex("SchoolRoleId");
+
+                    b.ToTable("UsersRolesInSchools");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -466,11 +509,18 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
+
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUserRole<int>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -492,34 +542,28 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolUser", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Property<int>("SchoolsId")
+                    b.Property<int>("RolesId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UsersId")
                         .HasColumnType("integer");
 
-                    b.HasKey("SchoolsId", "UsersId");
+                    b.HasKey("RolesId", "UsersId");
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("SchoolUser");
+                    b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("StudentsClassUser", b =>
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UsersToRoles", b =>
                 {
-                    b.Property<int>("StudentsClassesId")
-                        .HasColumnType("integer");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<int>");
 
-                    b.Property<int>("StudentsId")
-                        .HasColumnType("integer");
+                    b.HasIndex("RoleId");
 
-                    b.HasKey("StudentsClassesId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("StudentsClassUser");
+                    b.HasDiscriminator().HasValue("UsersToRoles");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.Equipment", b =>
@@ -538,9 +582,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("ClassesOrganizationSystem.Domain.Entities.RoomEntities.RoomStatus", "Status")
-                        .WithMany()
+                        .WithMany("Rooms")
                         .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("School");
@@ -616,7 +660,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClass", b =>
                 {
                     b.HasOne("ClassesOrganizationSystem.Domain.Entities.School", "School")
-                        .WithMany()
+                        .WithMany("StudentsClasses")
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -643,21 +687,16 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.Navigation("StudentsClass");
                 });
 
-            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", b =>
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.AddRoleRequest", b =>
                 {
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", "Role")
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.SchoolRole", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UserToSchool", b =>
-                {
                     b.HasOne("ClassesOrganizationSystem.Domain.Entities.School", "School")
-                        .WithMany("UsersToSchool")
+                        .WithMany()
                         .HasForeignKey("SchoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -668,7 +707,43 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Role");
+
                     b.Navigation("School");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", b =>
+                {
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.StudentsClass", null)
+                        .WithMany("Students")
+                        .HasForeignKey("StudentsClassId");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UserRoleInSchool", b =>
+                {
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.School", "School")
+                        .WithMany("UsersRolesInSchool")
+                        .HasForeignKey("SchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.SchoolRole", "SchoolRole")
+                        .WithMany()
+                        .HasForeignKey("SchoolRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", "User")
+                        .WithMany("SchoolRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("School");
+
+                    b.Navigation("SchoolRole");
 
                     b.Navigation("User");
                 });
@@ -700,21 +775,6 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", null)
@@ -724,11 +784,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SchoolUser", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.School", null)
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", null)
                         .WithMany()
-                        .HasForeignKey("SchoolsId")
+                        .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -739,19 +799,23 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StudentsClassUser", b =>
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UsersToRoles", b =>
                 {
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.StudentsClass", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsClassesId")
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", "Role")
+                        .WithMany("UsersToRole")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
+                    b.HasOne("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", "User")
+                        .WithMany("RolesToUser")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.Room", b =>
@@ -761,6 +825,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
                     b.Navigation("RoomsToEqipments");
                 });
 
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.RoomStatus", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.ScheduleEntites.LessonsSchedule", b =>
                 {
                     b.Navigation("Lessons");
@@ -768,7 +837,26 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.School", b =>
                 {
-                    b.Navigation("UsersToSchool");
+                    b.Navigation("StudentsClasses");
+
+                    b.Navigation("UsersRolesInSchool");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClass", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", b =>
+                {
+                    b.Navigation("UsersToRole");
+                });
+
+            modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", b =>
+                {
+                    b.Navigation("RolesToUser");
+
+                    b.Navigation("SchoolRoles");
                 });
 #pragma warning restore 612, 618
         }

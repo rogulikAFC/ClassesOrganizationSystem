@@ -30,13 +30,8 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             _context.Add(room);
         }
 
-        public void CreateEquipment(string title)
+        public void CreateEquipment(Equipment equipment)
         {
-            var equipment = new Equipment()
-            {
-                Title = title
-            };
-
             _context.Add(equipment);
         }
 
@@ -48,6 +43,8 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
         public async Task<Room?> GetRoomByIdAsync(int id)
         {
             return await _context.Rooms
+                .Include(room => room.School)
+                .Include(room => room.Status)
                 .FirstOrDefaultAsync(room => room.Id == id);
         }
 
@@ -57,8 +54,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             return await _context.Equipments
 
                 .Where(equipment => 
-                    query == null || equipment.Title
-                        .Contains(query, StringComparison.CurrentCultureIgnoreCase))
+                    query == null || equipment.Title.ToLower().Contains(query.ToLower()))
 
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -71,14 +67,15 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             int pageNum = 1, int pageSize = 10)
         {
             return await _context.Rooms
+                .Include(room => room.School)
+                .Include(room => room.Status)
 
                 .Where(room =>
-                    room.School == school
+                    (room.School == school)
                     &&
-                    isOpened == null || room.Status.IsOpened == isOpened
+                    (isOpened == null || room.Status.IsOpened == isOpened)
                     &&
-                    query == null || room.Number
-                        .Contains(query!, StringComparison.CurrentCultureIgnoreCase))
+                    (query == null || room.Number.ToLower().Contains(query.ToLower())))
 
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -105,10 +102,26 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
         public void SetRoomStatusForRoom(
             Room room, RoomStatus roomStatus)
-        {
-            _context.Remove(room.Status);
+        {   
+            if (room.Status != null)
+            {
+                var status = room.Status;
+
+                _context.RoomStatuses.Remove(status);
+            }
 
             room.Status = roomStatus;
+        }
+
+        public async Task<Equipment?> GetEquipmentByIdAsync(int id)
+        {
+            return await _context.Equipments
+                .FirstOrDefaultAsync(equipment => equipment.Id == id);
+        }
+
+        public void AddRoomStatus(RoomStatus roomStatus)
+        {
+            _context.Add(roomStatus);
         }
     }
 }

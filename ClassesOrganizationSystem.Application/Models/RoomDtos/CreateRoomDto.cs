@@ -14,9 +14,6 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
         [Required]
         public int SchoolId { get; set; }
 
-        [Required]
-        public int StatusId { get; set; }
-
         public IEnumerable<int> Equipments { get; set; }
             = new List<int>();
 
@@ -27,7 +24,6 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
                 Number = Number,
                 Capacity = Capacity,
                 SchoolId = SchoolId,
-                StatusId = StatusId
             };
         }
     }

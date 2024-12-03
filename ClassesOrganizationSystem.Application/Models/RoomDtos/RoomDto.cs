@@ -13,9 +13,9 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
 
         public SchoolAnnotationDto School { get; set; } = null!;
 
-        public RoomStatusDto Status { get; set; } = null!;
+        public RoomStatusDto? Status { get; set; }
 
-        public IEnumerable<EquipmentDto> Equipments { get; set; }
+        public List<EquipmentDto> Equipments { get; set; }
             = new List<EquipmentDto>();
 
         public static RoomDto MapFromRoom(Room room)
@@ -26,9 +26,10 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
                 Number = room.Number,
                 Capacity = room.Capacity,
                 School = SchoolAnnotationDto.MapFromSchool(room.School),
-                Status = RoomStatusDto.MapFromRoomStatus(room.Status),
+                Status = room.Status != null ? RoomStatusDto.MapFromRoomStatus(room.Status) : null,
                 Equipments = room.Equipments
                     .Select(EquipmentDto.MapFromEquipment)
+                    .ToList()
             };
         }
     }

@@ -15,23 +15,27 @@ namespace ClassesOrganizationSystem.Application.Models.UserDtos
 
         public string UserName { get; set; } = null!;
 
-        public string Role { get; set; } = null!;
-
-        public IEnumerable<SchoolAnnotationDto> Schools { get; set; }
+        public List<SchoolAnnotationDto> Schools { get; set; }
             = new List<SchoolAnnotationDto>();
+
+        public List<string> Roles { get; set; } = 
+            new List<string>();
 
         public static UserDto MapFromUser(User user)
         {
-            return new UserDto
+            return new UserDto()
             {
                 Id = user.Id,
                 Name = user.Name,
                 Surname = user.Surname,
                 Email = user.Email,
                 UserName = user.UserName,
-                Role = user.Role.Name,
                 Schools = user.Schools
                     .Select(SchoolAnnotationDto.MapFromSchool)
+                    .ToList(),
+                Roles = user.Roles
+                    .Select(user => user.Name)
+                    .ToList()
             };
         }
     }

@@ -49,11 +49,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
                 .Where(school =>
                     query == null
-                        || school.Title.Contains(query, StringComparison.CurrentCultureIgnoreCase)
+                        || school.Title.ToLower().Contains(query.ToLower())
                         || (school.Address != null
-                            && school.Address.Contains(query, StringComparison.CurrentCultureIgnoreCase)))
+                            && school.Address.ToLower().Contains(query.ToLower())))
 
-                .ToListAsync();
+            .ToListAsync();
         }
 
         public void RemoveSchool(School school)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
 {
@@ -16,11 +17,6 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
         public string FullName => Name + " " + Surname;
 
         [Required]
-        public int RoleId { get; set; }
-
-        public Role Role { get; set; } = null!;
-
-        [Required]
         [EmailAddress]
         public override string Email { get; set; } = null!;
 
@@ -32,23 +28,36 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
         [MaxLength(32)]
         public override string UserName { get; set; } = null!;
 
-        public IEnumerable<UserRoleInSchool> SchoolRoles { get; set; }
+        public List<UsersToRoles> RolesToUser { get; set; }
+            = new List<UsersToRoles>();
+
+        public List<Role> Roles => 
+            RolesToUser
+                .Select(rolesToUser => rolesToUser.Role)
+                .ToList();
+
+        public List<UserRoleInSchool> SchoolRoles { get; set; }
             = new List<UserRoleInSchool>();
 
-        public IEnumerable<StudentsClassToStudent> StudentsClassesToStudents
+        public List<StudentsClassToStudent> StudentsClassesToStudents
             = new List<StudentsClassToStudent>();
 
-        public IEnumerable<StudentsClass> StudentsClasses
+        [NotMapped]
+        public List<StudentsClass> StudentsClasses
             => StudentsClassesToStudents.Select(studentsClassToStudent =>
-                studentsClassToStudent.StudentsClass);
+                studentsClassToStudent.StudentsClass)
+            .ToList();
 
-        public IEnumerable<School> Schools => 
-            SchoolRoles.Select(userRoleInSchool => userRoleInSchool.School);
+        [NotMapped]
+        public List<School> Schools => 
+            SchoolRoles.Select(userRoleInSchool => userRoleInSchool.School)
+            .ToList();
 
-        public IEnumerable<string> GetUserRolesInSchool(School school) =>  
+        public List<string> GetUserRolesInSchool(School school) =>  
             SchoolRoles
                 .Where(userRoleInSchool => userRoleInSchool.School == school)
-                .Select(userRoleInSchool => userRoleInSchool.SchoolRole.Name);
+                .Select(userRoleInSchool => userRoleInSchool.SchoolRole.Name)
+            .ToList();
 
         public bool IsUserAdminInSchool(School school) =>
             GetUserRolesInSchool(school)

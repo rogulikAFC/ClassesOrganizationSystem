@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
 {
-    [PrimaryKey(nameof(UserId), nameof(SchoolId), nameof(RoleId))]
     public class AddRoleRequest
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [Required]
         public int UserId { get; set; }
 

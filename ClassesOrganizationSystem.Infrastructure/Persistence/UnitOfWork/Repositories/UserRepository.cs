@@ -64,7 +64,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .FirstOrDefaultAsync(schoolRole => schoolRole.Id == id);
         }
 
-        public async Task<IEnumerable<SchoolRole>> GetSchoolRolesByQuery(string query)
+        public async Task<IEnumerable<SchoolRole>> ListSchoolRolesByQueryAsync(string query)
         {
             return await _context.SchoolRoles
                 .Where(schoolRole =>
@@ -75,12 +75,32 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
         public async Task<User?> GetUserByIdAsync(int id)
         {
             return await _context.Users
+
+                .Include(user => user.SchoolRoles)
+                .ThenInclude(roleInSchool => roleInSchool.SchoolRole)
+
+                .Include(user => user.SchoolRoles)
+                .ThenInclude(roleInSchool => roleInSchool.School)
+
+                .Include(user => user.RolesToUser)
+                .ThenInclude(roleToUser => roleToUser.Role)
+
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
+
+                .Include(user => user.SchoolRoles)
+                .ThenInclude(roleInSchool => roleInSchool.SchoolRole)
+
+                .Include(user => user.SchoolRoles)
+                .ThenInclude(roleInSchool => roleInSchool.School)
+
+                .Include(user => user.RolesToUser)
+                .ThenInclude(roleToUser => roleToUser.Role)
+
                 .FirstOrDefaultAsync(user =>
                     user.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
@@ -102,11 +122,18 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
         public async Task<IEnumerable<IdentityError>?> RegisterUserAsync(User user, string password)
         {
-            var identityResult = await _userManager.CreateAsync(user, password);
+            var registrationResult = await _userManager.CreateAsync(user, password);
 
-            if (!identityResult.Succeeded)
+            if (!registrationResult.Succeeded)
             {
-                return identityResult.Errors;
+                return registrationResult.Errors;
+            }
+
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, "user");
+
+            if (!addToRoleResult.Succeeded)
+            {
+                return addToRoleResult.Errors;
             }
 
             return null;

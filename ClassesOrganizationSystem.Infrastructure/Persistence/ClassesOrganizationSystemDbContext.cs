@@ -43,10 +43,27 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<StudentsClass>()
-                .HasMany(studentsClass => studentsClass.Students)
-                .WithMany(student => student.StudentsClasses)
-                .UsingEntity<StudentsClassToStudent>();
+            builder.Entity<User>()
+                .HasMany(user => user.RolesToUser)
+                .WithOne(userToRole => userToRole.User)
+                .HasForeignKey(userToRole => userToRole.UserId);
+
+            builder.Entity<Role>()
+                .HasMany(role => role.UsersToRole)
+                .WithOne(userToRole => userToRole.Role)
+                .HasForeignKey(userToRole => userToRole.RoleId);
+
+            builder.Entity<Room>()
+                .HasOne(room => room.Status)
+                .WithMany(status => status.Rooms)
+                .HasForeignKey(room => room.StatusId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<AddRoleRequest>()
+                .HasAlternateKey(
+                    nameof(AddRoleRequest.UserId),
+                    nameof(AddRoleRequest.RoleId),
+                    nameof(AddRoleRequest.SchoolId));
         }
     }
 }
