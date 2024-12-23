@@ -1,26 +1,22 @@
-﻿using ClassesOrganizationSystem.Application.Models.SchoolDtos;
-using ClassesOrganizationSystem.Domain.Entities.UserEntites;
+﻿using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 
 namespace ClassesOrganizationSystem.Application.Models.UserDtos
 {
-    public class AddRoleRequestDto
+    public class AddRoleRequestAnnotationDto
     {
         public int Id { get; set; }
 
         public UserAnnotationDto User { get; set; } = null!;
 
-        public SchoolAnnotationDto School { get; set; } = null!;
-
         public string Role { get; set; } = null!;
 
-        public static AddRoleRequestDto MapFromAddRoleRequest(
+        public static AddRoleRequestAnnotationDto MapFromAddRoleRequest(
             AddRoleRequest request)
         {
-            return new AddRoleRequestDto
+            return new AddRoleRequestAnnotationDto
             {
                 Id = request.Id,
                 User = UserAnnotationDto.MapFromUser(request.User),
-                School = SchoolAnnotationDto.MapFromSchool(request.School),
                 Role = request.Role.Name,
             };
         }

@@ -8,7 +8,7 @@ namespace ClassesOrganizationSystem.Application.Models.StudentsClassDtos
 
         public string Title { get; set; } = null!;
 
-        public int SchoolId { get; set; }
+        public int StudentsCount { get; set; }
 
         public static StudentsClassDto MapFromStudentsClass(
             StudentsClass studentsClass)
@@ -17,7 +17,7 @@ namespace ClassesOrganizationSystem.Application.Models.StudentsClassDtos
             {
                 Id = studentsClass.Id,
                 Title = studentsClass.Title,
-                SchoolId = studentsClass.SchoolId,
+                StudentsCount = studentsClass.Students.Count()
             };
         }
     }

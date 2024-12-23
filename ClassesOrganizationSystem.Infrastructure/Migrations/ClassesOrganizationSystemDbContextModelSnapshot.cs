@@ -42,7 +42,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Equipments");
+                    b.ToTable("Equipments", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.Room", b =>
@@ -73,7 +73,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.RoomStatus", b =>
@@ -93,7 +93,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomStatuses");
+                    b.ToTable("RoomStatuses", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.RoomEntities.RoomToEquipment", b =>
@@ -108,7 +108,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("EquipmentId");
 
-                    b.ToTable("RoomsToEquipments");
+                    b.ToTable("RoomsToEquipments", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.ScheduleEntites.Lesson", b =>
@@ -144,7 +144,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.ScheduleEntites.LessonsSchedule", b =>
@@ -168,7 +168,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("StudentsClassId");
 
-                    b.ToTable("LessonsSchedules");
+                    b.ToTable("LessonsSchedules", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.ScheduleEntites.Subject", b =>
@@ -186,7 +186,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.School", b =>
@@ -215,7 +215,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Schools");
+                    b.ToTable("Schools", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClass", b =>
@@ -238,7 +238,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("StudentsClasses");
+                    b.ToTable("StudentsClasses", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.StudentsClassToStudent", b =>
@@ -253,7 +253,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentsClassesToStudents");
+                    b.ToTable("StudentsClassesToStudents", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.AddRoleRequest", b =>
@@ -281,7 +281,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("SchoolId");
 
-                    b.ToTable("AddRoleRequests");
+                    b.ToTable("AddRoleRequests", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.Role", b =>
@@ -329,7 +329,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SchoolRoles");
+                    b.ToTable("SchoolRoles", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.User", b =>
@@ -434,7 +434,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("SchoolRoleId");
 
-                    b.ToTable("UsersRolesInSchools");
+                    b.ToTable("UsersRolesInSchools", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -559,7 +559,7 @@ namespace ClassesOrganizationSystem.Infrastructure.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("RoleUser");
+                    b.ToTable("RoleUser", (string)null);
                 });
 
             modelBuilder.Entity("ClassesOrganizationSystem.Domain.Entities.UserEntites.UsersToRoles", b =>

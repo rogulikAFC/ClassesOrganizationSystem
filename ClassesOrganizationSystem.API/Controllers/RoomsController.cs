@@ -216,7 +216,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(createRoomDto.SchoolId));
             }
 
-            if (!user.IsUserAdminInSchool(school))
+            if (!user.IsAdminInSchool(school))
             {
                 return Unauthorized("Только администрация может добавлять кабинеты в школу");
             }
@@ -283,7 +283,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            if (!user.IsUserAdminInSchool(room.School))
+            if (!user.IsAdminInSchool(room.School))
             {
                 return Unauthorized("Только администрация может удалять кабинеты из школы");
             }
@@ -325,7 +325,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            if (!user.IsUserAdminInSchool(room.School))
+            if (!user.IsAdminInSchool(room.School))
             {
                 return Unauthorized("Только администрация может изменять кабинеты школы");
             }
@@ -408,7 +408,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            if (!user.IsUserAdminInSchool(room.School))
+            if (!user.IsAdminInSchool(room.School))
             {
                 return Unauthorized("Только администрация может ставить кабинетам школы статус");
             }
@@ -453,7 +453,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(roomId));
             }
 
-            if (!user.IsUserAdminInSchool(room.School))
+            if (!user.IsAdminInSchool(room.School))
             {
                 return Unauthorized("Только администрация может добавлять оборудование в кабинеты");
             }
@@ -503,7 +503,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(roomId));
             }
 
-            if (!user.IsUserAdminInSchool(room.School))
+            if (!user.IsAdminInSchool(room.School))
             {
                 return Unauthorized("Только администрация может удалять оборудование из кабинета");
             }

@@ -127,7 +127,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            if (!user.IsUserAdminInSchool(school))
+            if (!user.IsAdminInSchool(school))
             {
                 return Unauthorized("Только администрация может удалить школу");
             }
@@ -168,7 +168,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(id));
             }
 
-            if (!user.IsUserAdminInSchool(school))
+            if (!user.IsAdminInSchool(school))
             {
                 return Unauthorized("Только администрация может изменять данные школы");
             }

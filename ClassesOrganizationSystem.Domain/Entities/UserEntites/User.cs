@@ -14,6 +14,7 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
         [MaxLength(32)]
         public string Surname { get; set; } = null!;
 
+        [NotMapped]
         public string FullName => Name + " " + Surname;
 
         [Required]
@@ -59,16 +60,20 @@ namespace ClassesOrganizationSystem.Domain.Entities.UserEntites
                 .Select(userRoleInSchool => userRoleInSchool.SchoolRole.Name)
             .ToList();
 
-        public bool IsUserAdminInSchool(School school) =>
+        public bool IsAdminInSchool(School school) =>
             GetUserRolesInSchool(school)
             .Contains("admin");
 
-        public bool IsUserTeacherInSchool(School school) =>
+        public bool IsTeacherInSchool(School school) =>
             GetUserRolesInSchool(school)
             .Contains("teacher");
 
-        public bool IsUserStudentInSchool(School school) =>
+        public bool IsStudentInSchool(School school) =>
             GetUserRolesInSchool(school)
             .Contains("student");
+
+        public bool IsUserInSchool(School school) =>
+            GetUserRolesInSchool(school)
+            .Any();
     }
 }

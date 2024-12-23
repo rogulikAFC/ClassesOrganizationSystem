@@ -1,12 +1,15 @@
-﻿using ClassesOrganizationSystem.Application.Models.UserDtos;
+﻿using ClassesOrganizationSystem.Application.Models.SchoolDtos;
+using ClassesOrganizationSystem.Application.Models.UserDtos;
 using ClassesOrganizationSystem.Domain.Entities;
 
 namespace ClassesOrganizationSystem.Application.Models.StudentsClassDtos
 {
     public class StudentsClassWithStudentsDto : StudentsClassDto
     {
-        public IEnumerable<UserDto> Students { get; set; }
-            = new List<UserDto>();  
+        public IEnumerable<UserAnnotationDto> Students { get; set; }
+            = new List<UserAnnotationDto>();
+
+        public SchoolAnnotationDto School { get; set; } = null!;
         
         public static new StudentsClassWithStudentsDto MapFromStudentsClass(
             StudentsClass studentsClass)
@@ -15,9 +18,10 @@ namespace ClassesOrganizationSystem.Application.Models.StudentsClassDtos
             {
                 Id = studentsClass.Id,
                 Title = studentsClass.Title,
-                SchoolId = studentsClass.SchoolId,
+                StudentsCount = studentsClass.Students.Count(),
                 Students = studentsClass.Students
-                    .Select(UserDto.MapFromUser)
+                    .Select(UserAnnotationDto.MapFromUser),
+                School = SchoolAnnotationDto.MapFromSchool(studentsClass.School)
             };
         }
     }

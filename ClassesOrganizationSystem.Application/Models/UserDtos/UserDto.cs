@@ -21,6 +21,9 @@ namespace ClassesOrganizationSystem.Application.Models.UserDtos
         public List<string> Roles { get; set; } = 
             new List<string>();
 
+        public List<UserRoleInSchoolForUserDto> RolesInSchools { get; set; } =
+            new List<UserRoleInSchoolForUserDto>();
+
         public static UserDto MapFromUser(User user)
         {
             return new UserDto()
@@ -30,12 +33,18 @@ namespace ClassesOrganizationSystem.Application.Models.UserDtos
                 Surname = user.Surname,
                 Email = user.Email,
                 UserName = user.UserName,
+
                 Schools = user.Schools
                     .Select(SchoolAnnotationDto.MapFromSchool)
                     .ToList(),
+
                 Roles = user.Roles
                     .Select(user => user.Name)
-                    .ToList()
+                    .ToList(),
+
+                RolesInSchools = user.SchoolRoles
+                    .Select(UserRoleInSchoolForUserDto.MapFromUserRoleInSchool)
+                    .ToList(),
             };
         }
     }

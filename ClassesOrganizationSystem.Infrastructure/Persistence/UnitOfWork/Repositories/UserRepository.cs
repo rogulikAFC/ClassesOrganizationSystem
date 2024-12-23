@@ -1,6 +1,7 @@
 ﻿using ClassesOrganizationSystem.Application.UnitOfWork.Repositories;
 using ClassesOrganizationSystem.Domain.Entities;
 using ClassesOrganizationSystem.Domain.Entities.UserEntites;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,8 +31,26 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             _context.Add(request);
         }
 
-        public void AddUserToClass(User user, StudentsClass studentsClass)
+        public async Task AddUserToClassAsync(
+            User user, StudentsClass studentsClass, School? school)
         {
+            var role = (await ListSchoolRolesByQueryAsync("student"))
+                .FirstOrDefault();
+
+            if (role == null)
+            {
+                return;
+            }
+
+            if (school == null)
+            {
+                AddUserWithRoleToSchool(user, studentsClass.School, role);
+            } 
+            else 
+            {
+                AddUserWithRoleToSchool(user, school, role);
+            }
+
             var userToClass = new StudentsClassToStudent
             {
                 Student = user,
@@ -43,6 +62,17 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
         public void AddUserWithRoleToSchool(User user, School school, SchoolRole role)
         {
+            var isUserAlreadyHasRole = _context.UsersRolesInSchools
+                .Any(usersRoleInSchool =>
+                    usersRoleInSchool.UserId == user.Id
+                    && usersRoleInSchool.SchoolId == school.Id
+                    && usersRoleInSchool.SchoolRoleId == role.Id);
+
+            if (isUserAlreadyHasRole)
+            {
+                return;
+            }
+
             var userRoleInSchool = new UserRoleInSchool
             {
                 User = user,
@@ -64,11 +94,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .FirstOrDefaultAsync(schoolRole => schoolRole.Id == id);
         }
 
-        public async Task<IEnumerable<SchoolRole>> ListSchoolRolesByQueryAsync(string query)
+        public async Task<IEnumerable<SchoolRole>> ListSchoolRolesByQueryAsync(string? query)
         {
             return await _context.SchoolRoles
                 .Where(schoolRole =>
-                    schoolRole.Name.Equals(query, StringComparison.CurrentCultureIgnoreCase))
+                    query == null || schoolRole.Name.ToLower().Contains(query.ToLower()))
                 .ToListAsync();
         }
 
@@ -112,8 +142,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
                 .Where(user =>
                     query == null ||
-                        user.UserName.Contains(query, StringComparison.CurrentCultureIgnoreCase)
-                        || user.FullName.Contains(query, StringComparison.CurrentCultureIgnoreCase))
+                        user.UserName.ToLower().Contains(query.ToLower())
+                        || user.Name.ToLower().Contains(query.ToLower())
+                        || user.Surname.ToLower().Contains(query.ToLower()))
 
                 .Skip((pageNum - 1) * pageSize)
                 .Take(pageSize)
@@ -139,13 +170,19 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             return null;
         }
 
-        public void RemoveRoleFromUserInSchool(User user, School school, SchoolRole role)
+        public async Task RemoveRoleFromUserInSchoolAsync(User user, School school, SchoolRole role)
         {
-            var userRoleInSchool = _context.UsersRolesInSchools
+            var userRoleInSchool = await _context.UsersRolesInSchools
+
                 .FirstOrDefaultAsync(userRoleInSchool =>
-                    userRoleInSchool.SchoolRole == role
-                    && userRoleInSchool.User == user
-                    && userRoleInSchool.School == school);
+                    userRoleInSchool.SchoolRoleId == role.Id
+                    && userRoleInSchool.UserId == user.Id
+                    && userRoleInSchool.SchoolId == school.Id);
+
+            if (userRoleInSchool == null)
+            {
+                return;
+            }
 
             _context.Remove(userRoleInSchool);
         }
@@ -162,10 +199,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                     classToStudent.StudentsClass == studentsClass
                     && classToStudent.Student == user);
 
-            if (classToUser != null)
+            if (classToUser == null)
             {
-                _context.Remove(classToUser);
+                throw new Exception("Пользователь не в школе");
             }
+            _context.Remove(classToUser);
         }
 
         public void RemoveUserFromSchool(User user, School school)
@@ -183,6 +221,69 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                     && roleInSchool.User == user);
 
             _context.RemoveRange(rolesInSchool);
+        }
+
+        public async Task<IEnumerable<AddRoleRequest>> ListAddRoleRequestsOfSchool(School school, int pageNum = 1, int pageSize = 10)
+        {
+            return await _context.AddRoleRequests
+
+                .Include(request => request.User)
+                .Include(request => request.Role)
+
+                .Where(addRoleRequest => addRoleRequest.SchoolId == school.Id)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public void AddClass(StudentsClass studentsClass)
+        {
+            _context.Add(studentsClass);
+        }
+
+        public void RemoveClass(StudentsClass studentsClass)
+        {
+            _context.Remove(studentsClass);
+        }
+
+        public async Task<IEnumerable<StudentsClass>> ListClassesOfSchool(
+            School school, string? query, int pageSize = 10, int pageNum = 1)
+        {
+            return await _context.StudentsClasses
+
+                .Include(studentsClass => studentsClass.StudentsClassesToStudents)
+
+                .Where(studentsClass => 
+                    studentsClass.SchoolId == school.Id
+                    && (query == null || studentsClass.Title.ToLower().Contains(query.ToLower())))
+
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+
+                .ToListAsync();
+        }
+
+        public async Task<StudentsClass?> GetClassByIdAsync(int id)
+        {
+            return await _context.StudentsClasses
+
+                .Include(studentsClass => studentsClass.StudentsClassesToStudents)
+                .ThenInclude(classesToStudents => classesToStudents.Student)
+
+                .Include(studentsClass => studentsClass.School)
+
+                .FirstOrDefaultAsync(studentsClass => studentsClass.Id == id);
+        }
+
+        public async Task<AddRoleRequest?> GetAddRoleRequestByIdAsync(int id)
+        {
+            return await _context.AddRoleRequests
+
+                .Include(request => request.School)
+                .Include(request => request.User)
+                .Include(request => request.Role)
+
+                .FirstOrDefaultAsync(request => request.Id == id);
         }
     }
 }

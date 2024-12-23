@@ -18,11 +18,12 @@ namespace ClassesOrganizationSystem.Domain.Entities
 
         public School School { get; set; } = null!;
 
-        public IEnumerable<StudentsClassToStudent> StudentsClassesToStudents
+        public List<StudentsClassToStudent> StudentsClassesToStudents { get; set; }
             = new List<StudentsClassToStudent>();
 
-        public IEnumerable<User> Students
+        public List<User> Students
             => StudentsClassesToStudents.Select(studentClassToStudent =>
-                studentClassToStudent.Student);
+                studentClassToStudent.Student)
+                .ToList();
     }
 }
