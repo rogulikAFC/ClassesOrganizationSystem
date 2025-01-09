@@ -27,6 +27,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             _context.Add(lessonsSchedule);
         }
 
+        public void AddSubject(Subject subject)
+        {
+            _context.Add(subject);
+        }
+
         public async Task<Lesson?> GetLessonById(int id)
         {
             return await _context.Lessons
@@ -203,6 +208,22 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .ToListAsync();
         }
 
+        public async Task<Subject?> GetSubjectByIdAsync(int id)
+        {
+            return await _context.Subjects
+                .FirstOrDefaultAsync(subject => subject.Id == id);
+        }
+
+        public async Task<IEnumerable<Subject>> ListSubjectsAsync(string? query, int pageNum = 1, int pageSize = 10)
+        {
+            return await _context.Subjects
+                .Where(subject => 
+                    query == null || subject.Title.ToLower().Contains(query.ToLower()))
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public void RemoveLesson(Lesson lesson)
         {
             _context.Remove(lesson);
@@ -211,6 +232,11 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
         public void RemoveLessonsSchedule(LessonsSchedule lessonsSchedule)
         {
             _context.Remove(lessonsSchedule);
+        }
+
+        public void RemoveSubject(Subject subject)
+        {
+            _context.Remove(subject);
         }
     }
 }

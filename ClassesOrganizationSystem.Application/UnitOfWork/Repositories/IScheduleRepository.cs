@@ -10,11 +10,11 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
     {
         Task<Lesson?> GetLessonById(int id);
 
-        Task<LessonsSchedule?> GetLessonsScheduleByIdAsync(int id);
-
         void RemoveLesson(Lesson lesson);
 
         void AddLesson(Lesson lesson);
+
+        Task<LessonsSchedule?> GetLessonsScheduleByIdAsync(int id);
 
         Task<LessonsSchedule?> GetLessonsScheduleByClassIdAndDayOfWeekAsync(
             StudentsClass studentsClass, int dayOfWeek);
@@ -40,14 +40,24 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         Task<IEnumerable<ListOfLessons>> GetLessonsSchedulesForTeacherForWeekAsync(
             User teacher);
 
-        void RemoveLessonsSchedule(LessonsSchedule lessonsSchedule);
-
-        void AddLessonsSchedule(LessonsSchedule lessonsSchedule);
-
         Task<ListOfLessons> GetLessonsScheduleForRoomForDayOfWeekAsync(
             Room room, int dayOfWeek);
 
         Task<ListOfLessons> GetLessonsScheduleForRoomForDate(
             Room room, DateOnly date);
+
+        void RemoveLessonsSchedule(LessonsSchedule lessonsSchedule);
+
+        void AddLessonsSchedule(LessonsSchedule lessonsSchedule);
+
+        void AddSubject(Subject subject);
+
+        void RemoveSubject(Subject subject);
+
+        Task<Subject?> GetSubjectByIdAsync(int id);
+
+        Task<IEnumerable<Subject>> ListSubjectsAsync(string? query, int pageNum, int pageSize);
+
+        // Write CRUD API template
     }
 }
