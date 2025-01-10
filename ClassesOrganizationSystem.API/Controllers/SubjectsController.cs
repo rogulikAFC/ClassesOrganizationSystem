@@ -1,10 +1,16 @@
 ﻿using ClassesOrganizationSystem.Application.Models.LessonDtos;
 using ClassesOrganizationSystem.Application.UnitOfWork;
+using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 using ClassesOrganizationSystem.Infrastructure.Persistence;
+using Duende.IdentityServer.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ClassesOrganizationSystem.API.Controllers
 {
@@ -13,10 +19,16 @@ namespace ClassesOrganizationSystem.API.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<SubjectsController> _logger;
+        private readonly UserManager<User> _userManager;
 
-        public SubjectsController(IUnitOfWork unitOfWork)
+        public SubjectsController(
+            IUnitOfWork unitOfWork, ILogger<SubjectsController> logger,
+            UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
+            _logger = logger;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -54,10 +66,36 @@ namespace ClassesOrganizationSystem.API.Controllers
             return Ok(subjectDtos);
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult<SubjectDto>> CreateSubject(
             CreateSubjectDto createSubjectDto)
         {
+            var stringUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (stringUserId == null)
+            {
+                return BadRequest(nameof(stringUserId));
+            }
+
+            var userId = int.Parse(stringUserId);
+
+            var user = await _unitOfWork.UserRepository
+                .GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(nameof(userId));
+            }
+
+            var isUserAdmin = await _userManager.IsInRoleAsync(
+                user, "admin");
+
+            if (!isUserAdmin)
+            {
+                return Unauthorized("Только администрация может добавлять новые предметы.");
+            }
+
             var subject = createSubjectDto.MapToSubject();
 
             _unitOfWork.ScheduleRepository.AddSubject(subject);
@@ -74,10 +112,36 @@ namespace ClassesOrganizationSystem.API.Controllers
                 subjectDto);
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPatch("{id}")]
         public async Task<ActionResult> UpdateSubject(
             int id, [FromBody] JsonPatchDocument patchDocument)
         {
+            var stringUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (stringUserId == null)
+            {
+                return BadRequest(nameof(stringUserId));
+            }
+
+            var userId = int.Parse(stringUserId);
+
+            var user = await _unitOfWork.UserRepository
+                .GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(nameof(userId));
+            }
+
+            var isUserAdmin = await _userManager.IsInRoleAsync(
+                user, "admin");
+
+            if (!isUserAdmin)
+            {
+                return Unauthorized("Только администрация может обновлять предметы.");
+            }
+
             var subject = await _unitOfWork.ScheduleRepository
                 .GetSubjectByIdAsync(id);
 
@@ -93,9 +157,35 @@ namespace ClassesOrganizationSystem.API.Controllers
             return NoContent();
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> RemoveSubject(int id)
         {
+            var stringUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (stringUserId == null)
+            {
+                return BadRequest(nameof(stringUserId));
+            }
+
+            var userId = int.Parse(stringUserId);
+
+            var user = await _unitOfWork.UserRepository
+                .GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(nameof(userId));
+            }
+
+            var isUserAdmin = await _userManager.IsInRoleAsync(
+                user, "admin");
+
+            if (!isUserAdmin)
+            {
+                return Unauthorized("Только администрация может удалять предметы.");
+            }
+
             var subject = await _unitOfWork.ScheduleRepository
                 .GetSubjectByIdAsync(id);
 
