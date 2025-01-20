@@ -5,6 +5,7 @@ using ClassesOrganizationSystem.Domain.Entities.RoomEntities;
 using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;
 using ClassesOrganizationSystem.Domain.Entities.UserEntites;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Repositories
 {
@@ -32,9 +33,14 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             _context.Add(subject);
         }
 
-        public async Task<Lesson?> GetLessonById(int id)
+        public async Task<Lesson?> GetLessonByIdAsync(int id)
         {
             return await _context.Lessons
+
+                .Include(lesson => lesson.Teacher)
+                .Include(lesson => lesson.Room)
+                .Include(lesson => lesson.Subject)
+
                 .FirstOrDefaultAsync(lesson => lesson.Id == id);
         }
 
@@ -42,6 +48,19 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             StudentsClass studentsClass, DateOnly date)
         {
             return await _context.LessonsSchedules
+
+                .Include(schedule => schedule.StudentsClass)
+                .ThenInclude(StudentsClass => StudentsClass.StudentsClassesToStudents)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Teacher)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Room)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Subject)
+
                 .FirstOrDefaultAsync(lessonsSchedule =>
                     lessonsSchedule.StudentsClass == studentsClass
                     && lessonsSchedule.Date == date);
@@ -51,6 +70,19 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             StudentsClass studentsClass, int dayOfWeek)
         {
             return await _context.LessonsSchedules
+
+                .Include(schedule => schedule.StudentsClass)
+                .ThenInclude(StudentsClass => StudentsClass.StudentsClassesToStudents)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Teacher)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Room)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Subject)
+
                 .FirstOrDefaultAsync(lessonsSchedule =>
                     lessonsSchedule.StudentsClass == studentsClass
                     && lessonsSchedule.DayOfWeek == dayOfWeek);
@@ -59,11 +91,24 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
         public async Task<LessonsSchedule?> GetLessonsScheduleByIdAsync(int id)
         {
             return await _context.LessonsSchedules
+
+                .Include(schedule => schedule.StudentsClass)
+                .ThenInclude(StudentsClass => StudentsClass.StudentsClassesToStudents)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Teacher)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Room)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Subject)
+
                 .FirstOrDefaultAsync(lessonsSchedule =>
                     lessonsSchedule.Id == id);
         }
 
-        public async Task<ListOfLessons> GetLessonsScheduleForRoomForDate(Room room, DateOnly date)
+        public async Task<ListOfLessons> GetLessonsScheduleForRoomForDateAsync(Room room, DateOnly date)
         {
             var listOfLessons = new ListOfLessons
             {
@@ -71,6 +116,10 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             };
 
             listOfLessons.Lessons = await _context.Lessons
+
+                .Include(lesson => lesson.Teacher)
+                .Include(lesson => lesson.Room)
+                .Include(lesson => lesson.Subject)
 
                 .Where(lesson =>
                     lesson.Room == room
@@ -92,6 +141,10 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
             listOfLessons.Lessons = await _context.Lessons
 
+                .Include(lesson => lesson.Teacher)
+                .Include(lesson => lesson.Room)
+                .Include(lesson => lesson.Subject)
+
                 .Where(lesson =>
                     lesson.Room == room
                     && lesson.LessonsSchedule.DayOfWeek == dayOfWeek)
@@ -112,6 +165,10 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
             listOfLessons.Lessons = await _context.Lessons
 
+                .Include(lesson => lesson.Teacher)
+                .Include(lesson => lesson.Room)
+                .Include(lesson => lesson.Subject)
+
                 .Where(lesson =>
                     lesson.Teacher == teacher
                     && lesson.LessonsSchedule.DayOfWeek == dayOfWeek)
@@ -131,6 +188,10 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             };
 
             listOfLessons.Lessons = await _context.Lessons
+                
+                .Include(lesson => lesson.Teacher)
+                .Include(lesson => lesson.Room)
+                .Include(lesson => lesson.Subject)
 
                 .Where(lesson =>
                     lesson.Teacher == teacher
@@ -147,37 +208,37 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
         {
             var lastWeekDay = firstWeekDay.AddDays(7);
 
-            return await _context.Lessons
+            var listsOfLessons = new List<ListOfLessons>();
 
-                .Where(lesson =>
-                    lesson.Teacher == teacher
-                    && lesson.LessonsSchedule.Date >= firstWeekDay
-                    && lesson.LessonsSchedule.Date <= lastWeekDay)
+            var dateRange = Enumerable.Range(1, 7)
+                .Select(firstWeekDay.AddDays)
+                .ToList();
 
-                .GroupBy(lesson => lesson.LessonsSchedule.Date)
-                .Select(lessonsGroup => new ListOfLessons
-                {
-                    Date = lessonsGroup.First().LessonsSchedule.Date,
-                    Lessons = lessonsGroup
-                })
-                .OrderBy(lessonsByDate => lessonsByDate.Date)
-                .ToListAsync();
+            foreach (DateOnly date in dateRange)
+            {
+                var lessons = await GetLessonsScheduleForTeacherForDateAsync(
+                    teacher, date);
+
+                listsOfLessons.Add(lessons);
+            }
+
+            return listsOfLessons;
         }
 
         public async Task<IEnumerable<ListOfLessons>> GetLessonsSchedulesForTeacherForWeekAsync(
             User teacher)
         {
-            return await _context.Lessons
-                .Where(lesson =>
-                    lesson.Teacher == teacher)
-                .GroupBy(lesson => lesson.LessonsSchedule.DayOfWeek)
-                .Select(lessonsGroup => new ListOfLessons
-                {
-                    DayOfWeek = lessonsGroup.First().LessonsSchedule.DayOfWeek,
-                    Lessons = lessonsGroup
-                })
-                .OrderBy(listOfLessons => listOfLessons.DayOfWeek)
-                .ToListAsync();
+            var listsOfLessons = new List<ListOfLessons>();
+
+            foreach (int i in Enumerable.Range(1, 7))
+            {
+                var lessons = await GetLessonsScheduleForTeacherByDayOfWeekAsync(
+                    teacher, i);
+
+                listsOfLessons.Add(lessons);
+            }
+
+            return listsOfLessons;
         }
 
         public async Task<IEnumerable<LessonsSchedule>> GetLessonsSchedulesForWeekForClassAsync(
@@ -186,6 +247,18 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             var lastWeekDay = firstWeekDay.AddDays(7);
 
             return await _context.LessonsSchedules
+
+                .Include(schedule => schedule.StudentsClass)
+                .ThenInclude(StudentsClass => StudentsClass.StudentsClassesToStudents)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Teacher)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Room)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Subject)
 
                 .Where(lessonsSchedule => 
                     lessonsSchedule.StudentsClass == studentsClass

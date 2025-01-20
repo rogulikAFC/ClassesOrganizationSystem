@@ -9,10 +9,10 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
         public int Id { get; set; }
 
         public int SerialNumber { get; set; }
+        
+        public UserAnnotationDto Teacher { get; set; } = null!;
 
-        public UserDto Teacher { get; set; } = null!;
-
-        public RoomDto Room { get; set; } = null!;
+        public RoomAnnotationDto Room { get; set; } = null!;
 
         public SubjectDto Subject { get; set; } = null!;
 
@@ -22,8 +22,8 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
             {
                 Id = lesson.Id,
                 SerialNumber = lesson.SerialNumber,
-                Teacher = UserDto.MapFromUser(lesson.Teacher),
-                Room = RoomDto.MapFromRoom(lesson.Room),
+                Teacher = UserAnnotationDto.MapFromUser(lesson.Teacher),
+                Room = RoomAnnotationDto.MapFromRoom(lesson.Room),
                 Subject = SubjectDto.MapFromSubject(lesson.Subject)
             };
         }

@@ -8,7 +8,7 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
 {
     public interface IScheduleRepository
     {
-        Task<Lesson?> GetLessonById(int id);
+        Task<Lesson?> GetLessonByIdAsync(int id);
 
         void RemoveLesson(Lesson lesson);
 
@@ -43,7 +43,7 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         Task<ListOfLessons> GetLessonsScheduleForRoomForDayOfWeekAsync(
             Room room, int dayOfWeek);
 
-        Task<ListOfLessons> GetLessonsScheduleForRoomForDate(
+        Task<ListOfLessons> GetLessonsScheduleForRoomForDateAsync(
             Room room, DateOnly date);
 
         void RemoveLessonsSchedule(LessonsSchedule lessonsSchedule);
@@ -57,7 +57,5 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         Task<Subject?> GetSubjectByIdAsync(int id);
 
         Task<IEnumerable<Subject>> ListSubjectsAsync(string? query, int pageNum, int pageSize);
-
-        // Write CRUD API template
     }
 }

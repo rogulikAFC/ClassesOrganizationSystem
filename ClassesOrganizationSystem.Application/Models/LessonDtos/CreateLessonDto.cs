@@ -28,6 +28,7 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
                 TeacherId = TeacherId,
                 RoomId = RoomId,
                 SubjectId = SubjectId,
+                LessonsScheduleId = LessonsScheduleId
             };
         }
     }

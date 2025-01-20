@@ -1,4 +1,5 @@
-﻿using ClassesOrganizationSystem.Domain.Entities;
+﻿using ClassesOrganizationSystem.Application.Models.StudentsClassDtos;
+using ClassesOrganizationSystem.Domain.Entities;
 using ClassesOrganizationSystem.Domain.Entities.ScheduleEntites;
 
 namespace ClassesOrganizationSystem.Application.Models.LessonDtos
@@ -7,7 +8,7 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
     {
         public int Id { get; set; }
 
-        public StudentsClass StudentsClass { get; set; } = null!;
+        public StudentsClassDto StudentsClass { get; set; } = null!;
 
         public int? DayOfWeek { get; set; }
 
@@ -22,7 +23,10 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
             return new LessonsScheduleDto
             {
                 Id = lessonsSchedule.Id,
-                StudentsClass = lessonsSchedule.StudentsClass,
+
+                StudentsClass = StudentsClassDto.MapFromStudentsClass(
+                    lessonsSchedule.StudentsClass),
+
                 DayOfWeek = lessonsSchedule.DayOfWeek,
                 Date = lessonsSchedule.Date,
                 Lessons = lessonsSchedule.Lessons
