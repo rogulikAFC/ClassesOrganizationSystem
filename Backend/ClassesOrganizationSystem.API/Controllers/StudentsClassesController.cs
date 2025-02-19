@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace ClassesOrganizationSystem.API.Controllers
@@ -407,6 +408,33 @@ namespace ClassesOrganizationSystem.API.Controllers
             await _unitOfWork.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("get_classes_of_user/{userId}")]
+        public async Task<ActionResult<IEnumerable<StudentsClassDto>>> GetClassesOfUserByUserId(
+            int userId)
+        {
+            var user = await _unitOfWork.UserRepository
+                .GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(nameof(userId));
+            }
+
+            var classes = await _unitOfWork.UserRepository
+                .GetUsersClassesAsync(user);
+
+            var classesDto = new List<StudentsClassDto>();
+
+            foreach (var studentsClass in classes)
+            {
+                var dto = StudentsClassDto.MapFromStudentsClass(studentsClass);
+
+                classesDto.Add(dto);
+            }
+
+            return Ok(classesDto);
         }
     }
 }

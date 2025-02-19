@@ -8,6 +8,9 @@ import App from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './pages/LoginPage';
+import AccountPage from './pages/ProfilePage';
+import StudentPage from './pages/StudentPage';
+import TeacherPage from './pages/TeacherPage';
 
 const root = document.getElementById("root");
 
@@ -18,6 +21,9 @@ ReactDOM.createRoot(root!).render(
         <Route path='/' element={<MainLayout />}>
           <Route path='test' element={<App />} />
           <Route path='login' element={<LoginPage />} />
+          <Route path='profile' element={<AccountPage />} />
+          <Route path='profile/student' element={<StudentPage />} />
+          <Route path='profile/teacher' element={<TeacherPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
 {
@@ -15,7 +16,7 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
             new List<ApiScope>
             {
                 new ApiScope("user"),
-                new ApiScope("admin")
+                new ApiScope("admin"),
             };
 
         public static IEnumerable<Client> Clients =>
@@ -27,13 +28,20 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
                     AllowedScopes =
                     {
                         "user",
-                        "admin"
+                        "admin",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
                     },
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())
-                    }
+                    },
+                    RefreshTokenUsage = TokenUsage.ReUse,
+                    AllowOfflineAccess = true,
+                    RefreshTokenExpiration = TokenExpiration.Absolute,
+                    AbsoluteRefreshTokenLifetime = 2592000,
+                    AccessTokenLifetime = 1,
                 }
             };
     }

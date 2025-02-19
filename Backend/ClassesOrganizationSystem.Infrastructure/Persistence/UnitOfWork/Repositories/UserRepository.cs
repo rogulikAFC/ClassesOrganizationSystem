@@ -285,5 +285,20 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
 
                 .FirstOrDefaultAsync(request => request.Id == id);
         }
+
+        public async Task<List<StudentsClass>> GetUsersClassesAsync(User user)
+        {
+            return await _context.StudentsClasses
+
+                .Where(studentsClass => studentsClass
+
+                    .StudentsClassesToStudents
+                    .Where(studentsClass => studentsClass.Student == user)
+                    .Any())
+
+                .Include(studentsClass => studentsClass.StudentsClassesToStudents)
+
+                .ToListAsync();
+        }
     }
 }

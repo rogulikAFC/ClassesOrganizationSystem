@@ -16,6 +16,8 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
 
         public SubjectDto Subject { get; set; } = null!;
 
+        public StudentsClassAnnotationDto StudentsClass { get; set; } = null!;
+
         public static LessonDto MapFromLesson(Lesson lesson)
         {
             return new LessonDto
@@ -24,7 +26,9 @@ namespace ClassesOrganizationSystem.Application.Models.LessonDtos
                 SerialNumber = lesson.SerialNumber,
                 Teacher = UserAnnotationDto.MapFromUser(lesson.Teacher),
                 Room = RoomAnnotationDto.MapFromRoom(lesson.Room),
-                Subject = SubjectDto.MapFromSubject(lesson.Subject)
+                Subject = SubjectDto.MapFromSubject(lesson.Subject),
+                StudentsClass = StudentsClassAnnotationDto.MapFromStudentsClass(
+                    lesson.LessonsSchedule.StudentsClass)
             };
         }
     }

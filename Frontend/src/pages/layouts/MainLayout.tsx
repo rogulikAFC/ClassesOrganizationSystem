@@ -10,10 +10,9 @@ const MainLayout: FC = () => (
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="justify-content-between w-100">
             
-              <div className="d-flex">
-                <Nav.Link href="#home" className="me-a">На главную</Nav.Link>
-                <Nav.Link href="#">Личный кабинет</Nav.Link>
-                <Nav.Link href="#">Регистрация</Nav.Link>
+              <div className="d-flex gap-2">
+                <Nav.Link href="/profile">Личный кабинет</Nav.Link>
+                <Nav.Link href="/login">Регистрация</Nav.Link>
               </div>
 
             <Form.Group className="d-flex">

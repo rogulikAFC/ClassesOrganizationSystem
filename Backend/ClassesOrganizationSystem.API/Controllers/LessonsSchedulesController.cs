@@ -207,7 +207,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(userId));
             }
 
-            if (!user.IsUserInSchool(studentsClass.School) || !await _userManager.IsInRoleAsync(user, "admin"))
+            if (!user.IsUserInSchool(studentsClass.School) && !await _userManager.IsInRoleAsync(user, "admin"))
             {
                 return Unauthorized("Только пользователь, привязанный к школе, может просматривать расписание.");
             }
@@ -266,12 +266,15 @@ namespace ClassesOrganizationSystem.API.Controllers
             var user = await _unitOfWork.UserRepository
                 .GetUserByIdAsync(userId);
 
+            _logger.LogWarning("User ID and teacher ID: " + (userId == teacherId).ToString());
+            _logger.LogWarning("User ID: " + userId + "   Teacher ID" + teacherId);
+
             if (user == null)
             {
                 return NotFound(nameof(userId));
             }
 
-            if ((userId != teacherId) || !await _userManager.IsInRoleAsync(user, "admin"))
+            if (!((userId == teacherId) || await _userManager.IsInRoleAsync(user, "admin")))
             {
                 return Unauthorized("Только учитель может просматривать расписания занятий для себя");
             }
@@ -468,7 +471,7 @@ namespace ClassesOrganizationSystem.API.Controllers
 
         [HttpGet("for_teacher/{teacherId}/for_week")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<IEnumerable<LessonsScheduleDto>>> GetLessonsSchedulesForTeacherForWeek(
+        public async Task<ActionResult<IEnumerable<ListOfLessonsDto>>> GetLessonsSchedulesForTeacherForWeek(
             int teacherId)
         {
             var teacher = await _unitOfWork.UserRepository

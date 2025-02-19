@@ -1,3 +1,4 @@
+using Duende.IdentityServer.Configuration;
 using static ClassesOrganizationSystem.Infrastructure.IdentityServer.IdentityDI;
 using static ClassesOrganizationSystem.Infrastructure.Persistence.PersistenceDI;
 
@@ -19,8 +20,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add services to the container.
-
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
@@ -28,9 +27,23 @@ builder.Services.AddPersistence(builder.Configuration);
 
 builder.Services.AddCustomIdentity();
 
-var app = builder.Build();
+//builder.Services.AddIdentityServer(options =>
+//{
+//    options.Cors = new Duende.IdentityServer.Configuration.CorsOptions()
+//    {
+//        CorsPaths = { new PathString("http://localhost:5173/") },
+//    };
+//});
 
-// Configure the HTTP request pipeline.
+builder.Services.PostConfigure<IdentityServerOptions>(options =>
+{
+    options.Cors = new CorsOptions()
+    {
+        CorsPaths = { PathString.FromUriComponent(new Uri("http://localhost:5173/")) },
+    };
+});
+
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 

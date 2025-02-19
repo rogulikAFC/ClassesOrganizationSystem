@@ -37,6 +37,8 @@ namespace ClassesOrganizationSystem.Application.UnitOfWork.Repositories
         void RemoveUserFromSchool(
             User user, School school);
 
+        Task<List<StudentsClass>> GetUsersClassesAsync(User user);
+
         Task<IEnumerable<AddRoleRequest>> ListAddRoleRequestsOfSchool(
             School school, int pageNum = 1, int pageSize = 10);
 

@@ -41,6 +41,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Include(lesson => lesson.Room)
                 .Include(lesson => lesson.Subject)
 
+                .Include(lesson => lesson.LessonsSchedule)
+                .ThenInclude(lessonsSchedule => lessonsSchedule.StudentsClass)
+
                 .FirstOrDefaultAsync(lesson => lesson.Id == id);
         }
 
@@ -121,6 +124,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Include(lesson => lesson.Room)
                 .Include(lesson => lesson.Subject)
 
+                .Include(lesson => lesson.LessonsSchedule)
+                .ThenInclude(lessonsSchedule => lessonsSchedule.StudentsClass)
+
                 .Where(lesson =>
                     lesson.Room == room
                     && lesson.LessonsSchedule.Date == date)
@@ -144,6 +150,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Include(lesson => lesson.Teacher)
                 .Include(lesson => lesson.Room)
                 .Include(lesson => lesson.Subject)
+
+                .Include(lesson => lesson.LessonsSchedule)
+                .ThenInclude(lessonsSchedule => lessonsSchedule.StudentsClass)
 
                 .Where(lesson =>
                     lesson.Room == room
@@ -169,6 +178,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Include(lesson => lesson.Room)
                 .Include(lesson => lesson.Subject)
 
+                .Include(lesson => lesson.LessonsSchedule)
+                .ThenInclude(lessonsSchedule => lessonsSchedule.StudentsClass)
+
                 .Where(lesson =>
                     lesson.Teacher == teacher
                     && lesson.LessonsSchedule.DayOfWeek == dayOfWeek)
@@ -192,6 +204,9 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Include(lesson => lesson.Teacher)
                 .Include(lesson => lesson.Room)
                 .Include(lesson => lesson.Subject)
+
+                .Include(lesson => lesson.LessonsSchedule)
+                .ThenInclude(lessonsSchedule => lessonsSchedule.StudentsClass)
 
                 .Where(lesson =>
                     lesson.Teacher == teacher
@@ -277,6 +292,18 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
                 .Where(lessonsSchedule =>
                     lessonsSchedule.StudentsClass == studentsClass)
                 
+                .Include(schedule => schedule.StudentsClass)
+                .ThenInclude(StudentsClass => StudentsClass.StudentsClassesToStudents)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Teacher)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Room)
+
+                .Include(schedule => schedule.Lessons)
+                .ThenInclude(lesson => lesson.Subject)
+
                 .OrderBy(lessonsSchedule => lessonsSchedule.DayOfWeek)
                 .ToListAsync();
         }

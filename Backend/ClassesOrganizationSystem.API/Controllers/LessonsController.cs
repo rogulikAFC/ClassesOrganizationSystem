@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace ClassesOrganizationSystem.API.Controllers
 {
@@ -16,12 +17,15 @@ namespace ClassesOrganizationSystem.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
+        private readonly ILogger<LessonsController> _logger;
 
         public LessonsController(
-            IUnitOfWork unitOfWork, UserManager<User> userManager)
+            IUnitOfWork unitOfWork, UserManager<User> userManager
+            , ILogger<LessonsController> logger)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [HttpGet("{id}")]
