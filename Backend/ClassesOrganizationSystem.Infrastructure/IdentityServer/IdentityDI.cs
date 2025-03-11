@@ -18,7 +18,7 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
             services.AddAuthorization();
 
             services.AddIdentity<User, Role>()
-            .AddEntityFrameworkStores<ClassesOrganizationSystemDbContext>();
+                .AddEntityFrameworkStores<ClassesOrganizationSystemDbContext>();
 
             services.AddIdentityServer()
                 .AddInMemoryClients(Configuration.Clients)

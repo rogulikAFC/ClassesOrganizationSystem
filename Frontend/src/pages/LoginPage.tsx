@@ -16,7 +16,7 @@ type LoginForm = {
 
 const LoginPage: FC = () => {
   const { register, handleSubmit } = useForm<LoginForm>();
-  const { oAuthClient, setCookie, cookies } = useOAuth();
+  const { oAuthClient, setCookie, cookies } = useOAuth(false);
   const navigate = useNavigate();
 
   const onSubmit = async (loginForm: LoginForm) => {
@@ -31,8 +31,10 @@ const LoginPage: FC = () => {
     setCookie("access-token", token.accessToken);
     setCookie("refresh-token", token.refreshToken);
 
-    console.log(cookies["access-token"]);
-    console.log(cookies["refresh-token"])
+    console.log({refreshToken: cookies["refresh-token"]})
+    console.log({expAt: token.expiresAt})
+
+    setCookie("exp-at", token.expiresAt);
 
     navigate("/profile")
   };

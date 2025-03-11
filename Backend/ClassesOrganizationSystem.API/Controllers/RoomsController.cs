@@ -30,7 +30,7 @@ namespace ClassesOrganizationSystem.API.Controllers
 
         [HttpGet("in_school/{schoolId}")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> ListRoomsInSchool(
-            int schoolId, string? query, int pageSize = 10, int pageNum = 1, bool isOpened = false)
+            int schoolId, string? query, bool? isOpened, int pageSize = 10, int pageNum = 1)
         {
             var school = await _unitOfWork.SchoolRepository
                 .GetSchoolByIdAsync(schoolId);

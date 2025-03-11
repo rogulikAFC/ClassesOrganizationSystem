@@ -24,7 +24,9 @@ const MainLayout: FC = () => (
       </Container>
     </Navbar>
 
-    <Outlet />
+    <div className="ps-4 pe-4 pt-2">
+      <Outlet />
+    </div>
   </>
 );
 

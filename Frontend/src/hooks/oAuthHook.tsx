@@ -2,12 +2,17 @@ import { OAuth2Client, OAuth2Token } from "@badgateway/oauth2-client";
 import { useCookies } from "react-cookie";
 import User from "../types/User";
 import { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import dayjs from "dayjs";
 
-const useOAuth = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["access-token", "refresh-token"]);
+const useOAuth = (getUserAtFirst: boolean = true) => {
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "access-token",
+    "refresh-token",
+    "exp-at",
+  ]);
   const [user, setUser] = useState<User>();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const oAuthClient = new OAuth2Client({
     server: "https://localhost:7290/",
@@ -18,44 +23,51 @@ const useOAuth = () => {
     tokenEndpoint: "/connect/token",
   });
 
-  const getAccessToken = (): string => cookies["access-token"];
+  // console.log(parseInt(cookies["exp-at"]))
+  // console.log(dayjs().utcOffset())
 
-  const getCurrentUserOrRedirect = async (): Promise<User> => {
-    const token = getAccessToken();
+  const getAccessToken = (): string => {
+    console.log({
+      token: cookies["access-token"],
+      // timeLeft: parseInt(cookies["exp-at"]) - dayjs().utcOffset(),
+    });
 
+    return cookies["access-token"];
+  };
+
+  const getCurrentUser = async (redirect: boolean = true): Promise<User> => {
     let userInfoResponse = await fetch(
       "https://localhost:7290/connect/userinfo",
       {
         method: "GET",
         headers: new Headers({
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + getAccessToken(),
         }),
       }
     );
 
-    console.log({userInfoResponse})
+    console.log({ userInfoResponse });
 
     if (!userInfoResponse.ok) {
-      console.log("Response wasn't ok")
+      console.log("Response wasn't ok");
 
       const oAuth2Token = {
         accessToken: cookies["access-token"],
         refreshToken: cookies["refresh-token"],
       } as OAuth2Token;
 
-      console.log({oAuth2Token})
-
       try {
         const newToken = await oAuthClient.refreshToken(oAuth2Token, {
           scope: ["user", "admin", "openid", "offline_access"],
-          resource: ["openid", "profile"]
-        })
+          // resource: ["openid", "profile"],
 
-        console.log({newToken})
-  
+        });
+
+        console.log({ newToken });
+
         setCookie("access-token", newToken.accessToken);
         setCookie("refresh-token", newToken.refreshToken);
-  
+
         userInfoResponse = await fetch(
           "https://localhost:7290/connect/userinfo",
           {
@@ -65,9 +77,8 @@ const useOAuth = () => {
             }),
           }
         );
-
       } catch {
-        navigate("/login")
+        redirect && navigate("/login");
       }
     }
 
@@ -78,7 +89,7 @@ const useOAuth = () => {
       {
         method: "GET",
         headers: new Headers({
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + getAccessToken(),
         }),
       }
     );
@@ -87,21 +98,22 @@ const useOAuth = () => {
   };
 
   useEffect(() => {
-    getUser: (async () => {
-      const currentUser = await getCurrentUserOrRedirect();
+    getUserAtFirst &&
+      (async () => {
+        const currentUser = await getCurrentUser();
 
-      setUser(currentUser);
-    })();
+        setUser(currentUser);
+      })();
   }, [cookies["access-token"]]);
 
   return {
     getAccessToken,
-    getCurrentUserOrRedirect,
+    getCurrentUser,
     oAuthClient,
     user,
     cookies,
     setCookie,
-    removeCookie
+    removeCookie,
   };
 };
 

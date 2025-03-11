@@ -45,6 +45,8 @@ namespace ClassesOrganizationSystem.Infrastructure.Persistence.UnitOfWork.Reposi
             return await _context.Rooms
                 .Include(room => room.School)
                 .Include(room => room.Status)
+                .Include(room => room.RoomsToEqipments)
+                .ThenInclude(roomToEquipment => roomToEquipment.Equipment)
                 .FirstOrDefaultAsync(room => room.Id == id);
         }
 

@@ -37,11 +37,11 @@ namespace ClassesOrganizationSystem.Infrastructure.IdentityServer
                     {
                         new Secret("secret".Sha256())
                     },
-                    RefreshTokenUsage = TokenUsage.ReUse,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     AllowOfflineAccess = true,
                     RefreshTokenExpiration = TokenExpiration.Absolute,
-                    AbsoluteRefreshTokenLifetime = 2592000,
-                    AccessTokenLifetime = 1,
+                    //AbsoluteRefreshTokenLifetime = 2592000,
+                    AccessTokenLifetime = 60,
                 }
             };
     }

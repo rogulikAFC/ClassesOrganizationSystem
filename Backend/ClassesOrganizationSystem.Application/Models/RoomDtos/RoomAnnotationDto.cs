@@ -16,7 +16,7 @@ namespace ClassesOrganizationSystem.Application.Models.RoomDtos
             {
                 Id = room.Id,
                 Number = room.Number,
-                SchoolId = room.SchoolId,
+                SchoolId = room.SchoolId
             };
         }
     }

@@ -333,7 +333,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(userId));
             }
 
-            if (user.IsUserInSchool(room.School) || !await _userManager.IsInRoleAsync(user, "admin"))
+            if (!(user.IsUserInSchool(room.School) || await _userManager.IsInRoleAsync(user, "admin")))
             {
                 return Unauthorized("Только пользователь, привязанный к школе, может присматривать расписание.");
             }
@@ -387,7 +387,7 @@ namespace ClassesOrganizationSystem.API.Controllers
                 return NotFound(nameof(userId));
             }
 
-            if (!user.IsUserInSchool(studentsClass.School) || !await _userManager.IsInRoleAsync(user, "admin"))
+            if (!(user.IsUserInSchool(studentsClass.School) || await _userManager.IsInRoleAsync(user, "admin")))
             {
                 return Unauthorized("Только пользователь, привязанный к школе, может просматривать расписания.");
             }

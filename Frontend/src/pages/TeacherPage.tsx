@@ -4,7 +4,7 @@ import User from "../types/User";
 import LessonsScheduleForDayForTeacher from "../LessonsScheduleForDayForTeacher";
 
 const TeacherPage: FC = () => {
-  const { getCurrentUserOrRedirect } = useOAuth();
+  const { getCurrentUser: getCurrentUserOrRedirect } = useOAuth();
   const [user, setUser] = useState<User | undefined>();
 
   // const date = dayjs().format("YYYY-MM-DD");

@@ -8,7 +8,7 @@ import { Stack } from "react-bootstrap";
 import User from "../types/User";
 
 const StudentPage: FC = () => {
-  const { getCurrentUserOrRedirect } = useOAuth();
+  const { getCurrentUser: getCurrentUserOrRedirect } = useOAuth();
   const [user, setUser] = useState<User | undefined>();
   const [classes, setClasses] = useState<StudentsClass[]>([]);
 

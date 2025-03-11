@@ -8,13 +8,13 @@ import { Link } from "react-router";
 import RoleInSchool from "../types/RoleInSchool";
 
 const ProfilePage: FC = () => {
-  const { getCurrentUserOrRedirect } = useOAuth();
+  const { getCurrentUser } = useOAuth();
   const [ user, setUser ] = useState<User | undefined>();
   const [ userRoles, setUserRoles ] = useState<string[]>([]);
 
   useEffect(() => {
     getUser: (async () => {
-      setUser(await getCurrentUserOrRedirect())
+      setUser(await getCurrentUser())
     })()
   }, [])
 

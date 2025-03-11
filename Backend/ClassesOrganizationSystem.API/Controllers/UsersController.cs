@@ -54,6 +54,7 @@ namespace ClassesOrganizationSystem.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDto?>> GetUserByIdAsync(int id)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(id);
